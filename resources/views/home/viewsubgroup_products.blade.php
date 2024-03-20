@@ -211,7 +211,7 @@
                                 @foreach ($subgroupproducts as $subgroupproduct)
                                 <div class="col-md-6 col-lg-6 col-xl-12 h-25">
                                     <div
-                                        class="rounded position-relative fruite-item border d-flex justify-content-around p-1">
+                                        class="rounded position-relative fruite-item border border-secondary d-flex justify-content-around p-1">
                                         <div class="fruite-img " style="height: 200px;">
 
                                             @if($subgroupproduct->productImages->count() > 0)
@@ -249,7 +249,7 @@
                                                 </strong>
 
                                                 <a href="{{ route('cart', ['productId' => $subgroupproduct->id]) }}"
-                                                    class="btn border border-secondary rounded-pill px-1 text-primary"><i
+                                                    class="btn rounded-pill px-1 text-primary"><i
                                                         class="fa fa-shopping-bag  text-primary"></i> Add to cart</a>
                                             </div>
                                         </div>

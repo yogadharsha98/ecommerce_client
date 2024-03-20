@@ -210,13 +210,13 @@
                             <div class="row g-4">
                                 @foreach ($departments as $department)
                                 <div class="col-md-6 col-lg-6 col-xl-4 h-25">
-                                    <div class="rounded position-relative fruite-item border">
+                                    <div class="rounded position-relative fruite-item border border-secondary">
                                         <div class="fruite-img" style="height: 200px;">
                                             <!-- Adjust the height as needed -->
                                             <img src="{{ $department->image }}"
                                                 class="img-fluid w-100 h-100 object-fit-cover rounded-top" alt="">
                                         </div>
-                                        <div class="p-2 border border-secondary border-top-0 rounded-bottom">
+                                        <div class="p-2 border-top-0 rounded-bottom">
                                             <p>{{$department->department_title}}</p>
                                             <a href="{{url('category',$department->id)}}"
                                                 class="btn w-100 border border-secondary rounded-pill px-5 text-primary py-2">View</a>
