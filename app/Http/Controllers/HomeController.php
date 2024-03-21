@@ -79,4 +79,10 @@ class HomeController extends Controller
         // Return the view with the products
         return view('home.cart', ['products' => $products]);
     }
+
+    public function view_product_details()
+    {
+
+        return view('home.product_details');
+    }
 }
