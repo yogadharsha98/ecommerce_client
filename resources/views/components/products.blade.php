@@ -9,7 +9,7 @@
             <!-- Ensure the image container has relative positioning -->
 
             {{-- View button --}}
-            <a href="" class="btn btn-secondary view-button text-light"
+            <a href="{{url('product_details',$product->id)}}" class="btn btn-secondary view-button text-light"
                 style="position: absolute; top: 10px; left: 10px; z-index: 1;">View</a>
             @endif
         </div>
@@ -34,7 +34,8 @@
             <div class="d-flex justify-content-between flex-lg-wrap">
                 <p class="text-dark fw-bold mb-0"> <i class="fas fa-pound-sign"></i>
                     {{ $product->wscp_vat }}</p>
-                <a href="{{ route('cart') }}" class="btn rounded-pill border border-secondary px-1 text-primary"><i
+                <a href="{{ route('cart', ['productId' => $product->id]) }}"
+                    class="btn rounded-pill border border-secondary px-1 text-primary"><i
                         class="fa fa-shopping-bag  text-primary"></i> Add to cart</a>
             </div>
         </div>

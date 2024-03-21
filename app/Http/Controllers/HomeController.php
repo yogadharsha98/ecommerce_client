@@ -6,6 +6,7 @@ use App\Models\Banner;
 use App\Models\Department;
 use App\Models\Group;
 use App\Models\Product;
+use App\Models\Slider;
 use App\Models\SubGroup;
 use Illuminate\Http\Request;
 
@@ -14,8 +15,8 @@ class HomeController extends Controller
     public function index()
     {
         $data = Department::all();
-        $banner = Banner::all();
-        return view('home.home', compact('data', 'banner'));
+        $slider = Slider::all();
+        return view('home.home', compact('data', 'slider'));
     }
 
     public function view_products()
@@ -80,9 +81,13 @@ class HomeController extends Controller
         return view('home.cart', ['products' => $products]);
     }
 
-    public function view_product_details()
+    public function product_details($id)
     {
+        $products = Product::all();
+        $departments = Department::all();
+        $product_details = Product::find($id);
+        $banner = Banner::all();
 
-        return view('home.product_details');
+        return view('home.product_details', compact('departments', 'products', 'product_details', 'banner'));
     }
 }

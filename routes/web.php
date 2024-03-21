@@ -10,4 +10,4 @@ Route::get('/category/group/{id}', [HomeController::class, 'view_group'])->name(
 Route::get('/cart', [HomeController::class, 'showCart'])->name('cart');
 
 Route::get('/category/group/subgroup/{id}', [HomeController::class, 'view_subgroup_products'])->name('subgroup.products');
-Route::get('/product_details/{id}', [HomeController::class, 'view_product_details'])->name('product_details');
+Route::get('/product_details/{id}', [HomeController::class, 'product_details']);

@@ -4,11 +4,11 @@
             <div class="col-md-12 col-lg-12">
                 <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
                     <div class="carousel-inner" role="listbox">
-                        @foreach ($banner as $index => $bannerItem)
+                        @foreach ($slider as $index => $sliderItem)
                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}" id="bannerItem{{ $index }}">
-                            <img src="{{ $bannerItem->image }}" class="img-fluid w-100 h-100 bg-secondary rounded"
+                            <img src="{{ $sliderItem->image }}" class="img-fluid w-100 h-100 bg-secondary rounded"
                                 alt="Banner {{ $index }}">
-                            <a href="#" class="btn px-4 py-2 text-white rounded">{{ $bannerItem->title }}</a>
+                            <a href="#" class="btn px-4 py-2 text-white rounded">{{ $sliderItem->title }}</a>
                         </div>
                         @endforeach
 
