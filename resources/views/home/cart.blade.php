@@ -7,8 +7,8 @@
     <style type='text/css'>
         .product-image,
         .product-thumbnail {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             /* Adjust this value as needed */
             object-fit: cover;
         }
@@ -43,7 +43,7 @@
     <div class="container-fluid py-5">
         <div class="container py-5">
             <div class="table-responsive">
-                <table class="table">
+                <table class="table" style="font-size: 12px">
                     <thead>
                         <tr>
                             <th scope="col">Products</th>
@@ -52,20 +52,25 @@
                             <th scope="col">Group</th>
                             <th scope="col">Sub group</th>
                             <th scope="col">Quantity</th>
-                            <th scope="col">Total quantity price</th>
                             <th scope="col">Case</th>
+                            <th scope="col">Total quantity price</th>
                             <th scope="col">Total case price</th>
                             <th scope="col">Handle</th>
                         </tr>
+
                     </thead>
                     <tbody>
+                        <?php 
+                    $totalCasePrice = 0;
+                    $totalUnitPrice = 0;
+                ?>
                         @foreach ($cart as $cart)
                         <tr>
                             <td>
-                                {{-- @foreach($cart->product_images as $image)
-                                <img src="{{ asset($image->large_image) }}" alt="Product Image">
-                                @endforeach --}}
-                                <p>image</p>
+                                @foreach($cart->product_images as $image)
+                                <img src="{{ asset($image->large_image) }}" alt="Product Image" class="product-image">
+                                @endforeach
+
                             </td>
                             <td>
                                 {{$cart->product_title}}
@@ -83,13 +88,10 @@
                                 {{$cart->quantity}}
                             </td>
                             <td>
+                                {{$cart->case}}
+                            </td>
+                            <td>
                                 {{$cart->unit_price}}
-                            </td>
-                            <td>
-                                {{$cart->case}}
-                            </td>
-                            <td>
-                                {{$cart->case}}
                             </td>
                             <td>
                                 {{$cart->case_price}}
@@ -99,15 +101,16 @@
                             </td>
 
                         </tr>
+
+                        <?php 
+                    $totalUnitPrice += $cart->unit_price;
+                    $totalCasePrice += $cart->case_price;
+                ?>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-            <div class="mt-5">
-                <input type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
-                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Apply
-                    Coupon</button>
-            </div>
+
             <div class="row g-4 justify-content-end">
                 <div class="col-8"></div>
                 <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
@@ -115,16 +118,22 @@
                         <div class="p-4">
                             <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
                             <div class="d-flex justify-content-between mb-4">
-                                <h5 class="mb-0 me-4">Subtotal:</h5>
-                                <p class="mb-0">$96.00</p>
+                                <h5 class="mb-0 me-4">Total case price:</h5>
+                                <p class="mb-0">{{$totalCasePrice}}</p>
                             </div>
                             <div class="d-flex justify-content-between">
-                                <h5 class="mb-0 me-4">Shipping</h5>
+                                <h5 class="mb-0 me-4">Total unit price:</h5>
                                 <div class="">
-                                    <p class="mb-0">Flat rate: $3.00</p>
+                                    <p class="mb-0">{{$totalUnitPrice}}</p>
                                 </div>
                             </div>
-                            <p class="mb-0 text-end">Shipping to Ukraine.</p>
+                            <div class="d-flex justify-content-between">
+                                <h5 class="mb-0 me-4">Vat rate:</h5>
+                                <div class="">
+                                    <p class="mb-0">4545</p>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                             <h5 class="mb-0 ps-4 me-4">Total</h5>
