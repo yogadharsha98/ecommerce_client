@@ -1,6 +1,6 @@
 <div class="container-fluid service py-5">
     <div class="container-fluid">
-        <div class="row g-4 justify-content-center py-2">
+        <div class="row g-2 justify-content-center py-2">
             <div class="col-md-4 col-lg-2">
                 <a href="#">
                     <div class="service-item bg-secondary rounded border border-secondary">

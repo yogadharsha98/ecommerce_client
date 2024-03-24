@@ -18,6 +18,7 @@
 
 <body>
 
+
     <!-- Navbar start -->
     @include('components.navbar')
     <!-- Navbar End -->
@@ -41,7 +42,7 @@
 
 
     <!-- Single Product Start -->
-    <div class="container-fluid py-5 mt-5">
+    <div class="container-fluid py-3">
         <div class="container py-5">
             <div class="row g-4 mb-5">
                 <div class="col-lg-8 col-xl-9">
@@ -66,36 +67,71 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <h4 class="fw-bold mb-3">{{$product_details->product_name}}</h4>
-                            {{-- <p class="mb-3">Category: Vegetables</p> --}}
-                            <h5 class="fw-bold mb-3"> <i class="fas fa-pound-sign"></i>
-                                {{ $product_details->wscp_vat }}</h5>
-                            <div class="d-flex mb-4">
-                                <i class="fa fa-star text-secondary"></i>
-                                <i class="fa fa-star text-secondary"></i>
-                                <i class="fa fa-star text-secondary"></i>
-                                <i class="fa fa-star text-secondary"></i>
-                                <i class="fa fa-star"></i>
-                            </div>
-                            <p class="mb-4">{{ $product_details->product_description }}</p>
 
-                            <div class="input-group quantity mb-5" style="width: 100px;">
-                                <div class="input-group-btn">
+                        <div class="col-lg-6">
+                            <form action="{{url('add_cart',$product_details->id)}}" method="Post">
+                                @csrf
+                                <h4 class="fw-bold mb-3">{{$product_details->product_name}}</h4>
+                                {{-- <p class="mb-3">Category: Vegetables</p> --}}
+                                <div class="d-flex gap-5">
+                                    <h5 class="fw-bold mb-3" style="color: red"> <i class="fas fa-pound-sign"></i>
+                                        {{ $product_details->unit_price }}</h5>
+                                    <input type="number" name="quantity" value="1" min="1"
+                                        style="width:80px;height:30px;margin-left:60px">
+                                </div>
+
+                                <div class="d-flex align-items-center mb-3 gap-4">
+                                    <h5 class="mr-3">Case of {{$product_details->packsize}} for</h5>
+                                    <h5 style="color: red"><i class="fas fa-pound-sign"></i>
+                                        {{ $product_details->case_price }}</h5>
+                                </div>
+
+
+                                {{-- <div class="d-flex mb-4">
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star"></i>
+                                </div> --}}
+
+
+
+                                {{-- <div class="input-group-btn">
                                     <button class="btn btn-sm btn-minus rounded-circle bg-light border">
                                         <i class="fa fa-minus"></i>
                                     </button>
                                 </div>
-                                <input type="text" class="form-control form-control-sm text-center border-0" value="1">
+                                <input type="text" class="form-control form-control-sm text-center border-0" />
                                 <div class="input-group-btn">
                                     <button class="btn btn-sm btn-plus rounded-circle bg-light border">
                                         <i class="fa fa-plus"></i>
                                     </button>
+                                </div> --}}
+
+                                <div class="d-flex  gap-5">
+                                    <h5>Case </h5>
+                                    <input type="number" name="case_quantity" value="1" min="0"
+                                        style="width:80px;height:30px;">
                                 </div>
-                            </div>
-                            <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i
-                                    class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+
+                                {{-- <div class="d-flex  gap-5">
+                                    <h5>Bulk Quantity </h5>
+                                    <input type="number" name="bulk_quantity" value="1" min="0"
+                                        style="width:80px;height:30px;">
+                                </div> --}}
+                                <br />
+
+                                <p>{{$product_details->barcode_sku}}</p>
+                                <p class="mb-3">Department: {{$product_details->department_title}}</p>
+                                <p class="mb-3">Group: {{$product_details->group_title}}</p>
+                                <p class="mb-3">Subgroup: {{$product_details->sub_group_title}}</p>
+
+                                <input type="submit" value="Add to cart"
+                                    class="btn border border-secondary rounded-pill mt-3 px-4 py-2 mb-4 text-primary" />
+                            </form>
                         </div>
+
                         <div class="col-lg-12">
                             <nav>
                                 <div class="nav nav-tabs mb-3">
@@ -216,6 +252,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <form action="#">
                             <h4 class="mb-5 fw-bold">Leave a Reply</h4>
                             <div class="row g-4">
@@ -254,6 +291,7 @@
                                 </div>
                             </div>
                         </form>
+
                     </div>
                 </div>
                 <div class="col-lg-4 col-xl-3">

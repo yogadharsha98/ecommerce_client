@@ -8,7 +8,7 @@
     <style type='text/css'>
         .product-image,
         .product-thumbnail {
-            height: 200px;
+            height: 100px;
             /* Adjust this value as needed */
             object-fit: cover;
         }
@@ -215,12 +215,12 @@
                                             <!-- Adjust the height as needed -->
                                             <img src="{{ $subgroup->image }}"
                                                 class="img-fluid w-100 h-100 object-fit-cover rounded-top" alt="">
-                                        </div> --}}
-                                        <div class="p-2 border-top-0 rounded-bottom">
-                                            <p>{{$subgroup->sub_group_title}}</p>
-                                            <a href="{{ route('subgroup.products', ['id' => $subgroup->id]) }}"
-                                                class="btn w-100 border border-secondary rounded-pill px-5 text-primary py-2">View</a>
-                                        </div>
+                                        </div> --}}<a href="{{ route('subgroup.products', ['id' => $subgroup->id]) }}">
+                                            <div class="p-2 border-top-0 rounded-bottom">
+                                                <p>{{$subgroup->sub_group_title}}</p>
+
+                                            </div>
+                                        </a>
                                     </div>
                                 </div>
 

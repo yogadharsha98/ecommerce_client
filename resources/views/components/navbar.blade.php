@@ -1,5 +1,6 @@
 <div class="container-fluid fixed-top">
     <div class="container topbar bg-primary d-none d-lg-block">
+
         <div class="d-flex justify-content-between">
             <div class="top-info ps-2">
                 <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#"
@@ -49,15 +50,40 @@
                     <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
                         data-bs-toggle="modal" data-bs-target="#searchModal"><i
                             class="fas fa-search text-primary"></i></button>
-                    <a href="#" class="position-relative me-4 my-auto">
+                    <a href="{{url('show_cart')}}" class="position-relative me-4 my-auto">
                         <i class="fa fa-shopping-bag fa-2x"></i>
                         <span
                             class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                             style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
                     </a>
-                    <a href="#" class="my-auto">
-                        <i class="fas fa-user fa-2x"></i>
+
+                    @auth('customer')
+                    @if (session('customer'))
+                    <div class="d-flex gap-1">
+                        <p class="font-bold">
+                            {{ session('customer')->name }}
+                        </p>
+                        <form class="inline" method="Post" action="/logout">
+                            @csrf
+                            <button type="submit" class="btn btn-warning">
+                                Logout
+                            </button>
+
+                        </form>
+                    </div>
+                    @endif
+                    @else
+                    <a href="/login" class="my-auto">
+                        {{-- <i class="fa fa-sign-in fa-2x"></i> --}}
+                        <i class="fas fa-sign-in"></i> Sign In
                     </a>
+
+                    <a href="/register" class="my-auto me-1">
+                        {{-- <i class="fa fa-sign-in fa-2x"></i> --}}
+                        <i class="fas fa-sign-in"></i> Sign Up
+                    </a>
+                    @endauth
+
                 </div>
             </div>
         </nav>

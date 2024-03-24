@@ -17,45 +17,32 @@ class Product extends Model
         'department_id',
         'group_id',
         'sub_group_id',
-        'sub_group_id_1',
-        'sub_group_id_2',
-        'sub_group_id_3',
+        'department_title', // Add department_title to fillable fields
+        'group_title', // Add group_title to fillable fields
+        'sub_group_title', // Add sub_group_title to fillable fields
         'si_upc',
         'barcode_sku',
-        'b_m',
         'product_name',
         'product_description',
-        'kg_ml',
-        'units',
-        'ps',
-        'case',
-        'dimensions',
-        'cp_vat',
-        'is',
-        'lo',
-        'ar',
+        'packsize',
+        'unit_price',
+        'case_price',
+        'rsp',
         'vat',
-        'wscp_vat',
-        'samson_percent',
-        'unit_rrp',
-        'rupm',
+        'por',
         'bcqty_1',
         'bcp_1',
-        'b_percent_1',
+        'por_1',
         'bcqty_2',
         'bcp_2',
-        'b_percent_2',
+        'por_2',
         'bcqty_3',
         'bcp_3',
-        'b_percent_3',
-        'linked_item_1',
-        'linked_item_2',
-        'linked_item_3',
+        'por_3',
         'status',
-        'trending', // Added trending column
-        'featured', // Added featured column
+        'trending',
+        'featured',
     ];
-
     protected $casts = [
         'trending' => 'boolean', // Cast trending to boolean
         'featured' => 'boolean', // Cast featured to boolean

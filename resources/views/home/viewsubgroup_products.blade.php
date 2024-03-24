@@ -8,7 +8,7 @@
     <style type='text/css'>
         .product-image,
         .product-thumbnail {
-            height: 200px;
+            height: 100px;
             /* Adjust this value as needed */
             object-fit: cover;
         }
@@ -209,48 +209,42 @@
                         <div class="col-lg-9">
                             <div class="row g-4">
                                 @foreach ($subgroupproducts as $subgroupproduct)
-                                <div class="col-md-6 col-lg-6 col-xl-12 h-25">
+                                <div class="col-md-6 col-lg-6 col-xl-12" style="height:150px;">
                                     <div
                                         class="rounded position-relative fruite-item border border-secondary d-flex justify-content-around p-1">
-                                        <div class="fruite-img " style="height: 200px;">
+                                        <a href="{{url('product_details',$subgroupproduct->id)}}">
+                                            <div class="fruite-img" style="height: 200px;">
+                                                @if($subgroupproduct->productImages->count() > 0)
+                                                <div class="fruite-img">
+                                                    <img src="{{ asset($subgroupproduct->productImages->first()->large_image) }}"
+                                                        class="img-fluid rounded-top product-image" alt="Product Image">
+                                                </div>
+                                                @endif
 
-                                            @if($subgroupproduct->productImages->count() > 0)
-                                            <div class="fruite-img">
-                                                <img src="{{ asset($subgroupproduct->productImages->first()->large_image) }}"
-                                                    class="img-fluid  rounded-top product-image" alt="Product Image">
+                                                {{-- Retrieve the product thumbnail --}}
+                                                @if($subgroupproduct->productThumbnails->count() > 0)
+                                                <div class="thumbnail">
+                                                    <img src="{{ asset($subgroupproduct->productThumbnails->first()->thumbnail_image) }}"
+                                                        class="img-fluid w-100 h-100 object-fit-cover rounded-top product-thumbnail"
+                                                        alt="Product Thumbnail">
+                                                </div>
+                                                @endif
                                             </div>
-                                            @endif
-
-                                            {{-- Retrieve the product thumbnail --}}
-                                            @if($subgroupproduct->productThumbnails->count() > 0)
-                                            <div class="thumbnail">
-                                                <img src="{{ asset($subgroupproduct->productThumbnails->first()->thumbnail_image) }}"
-                                                    class="img-fluid w-100 h-100 object-fit-cover rounded-top product-thumbnail"
-                                                    alt="Product Thumbnail">
-                                            </div>
-                                            @endif
-                                        </div>
-                                        <div class=" mt-4 rounded-bottom">
-
+                                        </a>
+                                        <div class=" mt-2 rounded-bottom">
                                             <strong>
                                                 <p>{{$subgroupproduct->product_name}}
-                                            </strong> <br /> <strong class="text-danger">
-                                                {{ $subgroupproduct->case }} x {{ $subgroupproduct->units }} x {{
-                                                $subgroupproduct->kg_ml }}
-
-                                            </strong> </p>
-                                            <p>case of {{ $subgroupproduct->case }}</p>
-                                            <p>{{ $subgroupproduct->units }} x {{ $subgroupproduct->kg_ml }}</p>
+                                            </strong> <br />
+                                            <p>case of {{ $subgroupproduct->packsize }} = <i
+                                                    class="fas fa-pound-sign"></i> {{ $subgroupproduct->case_price }}
+                                            </p>
                                             <div class="d-flex justify-content-between">
                                                 <strong>
-                                                    <p class="text-danger fw-bold fs-4 mb-0"> <i
+                                                    <p class="text-danger fw-bold fs-4 mb-0"><i
                                                             class="fas fa-pound-sign"></i>
-                                                        {{ $subgroupproduct->wscp_vat }}</p>
+                                                        {{ $subgroupproduct->unit_price }}</p>
                                                 </strong>
 
-                                                <a href="{{ route('cart', ['productId' => $subgroupproduct->id]) }}"
-                                                    class="btn rounded-pill px-1 text-primary"><i
-                                                        class="fa fa-shopping-bag  text-primary"></i> Add to cart</a>
                                             </div>
                                         </div>
 

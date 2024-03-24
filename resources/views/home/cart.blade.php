@@ -17,6 +17,7 @@
 
 <body>
 
+
     <!-- Navbar start -->
     @include('components.navbar')
     <!-- Navbar End -->
@@ -46,42 +47,57 @@
                     <thead>
                         <tr>
                             <th scope="col">Products</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Department</th>
+                            <th scope="col">Group</th>
+                            <th scope="col">Sub group</th>
                             <th scope="col">Quantity</th>
-                            <th scope="col">Total</th>
+                            <th scope="col">Total quantity price</th>
+                            <th scope="col">Case</th>
+                            <th scope="col">Total case price</th>
                             <th scope="col">Handle</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($products as $product)
+                        @foreach ($cart as $cart)
                         <tr>
                             <td>
-
-                                @if($product->productImages->count() > 0)
-                                <div class="fruite-img">
-                                    <img src="{{ asset($product->productImages->first()->large_image) }}"
-                                        class=" product-image" alt="Product Image">
-                                </div>
-                                @endif
-
-                                @if($product->productThumbnails->count() > 0)
-                                <div class="thumbnail">
-                                    <img src="{{ asset($product->productThumbnails->first()->thumbnail_image) }}"
-                                        class="product-thumbnail" alt="Product Thumbnail">
-                                </div>
-                                @endif
-
-                                {{-- <img src="{{ asset($product->image) }}" class="img-fluid rounded-circle"
-                                    style="width: 80px; height: 80px;" alt="Product Image"> --}}
+                                {{-- @foreach($cart->product_images as $image)
+                                <img src="{{ asset($image->large_image) }}" alt="Product Image">
+                                @endforeach --}}
+                                <p>image</p>
                             </td>
                             <td>
-                                <p class="mb-0 mt-4">{{ $product->product_name }}</p>
+                                {{$cart->product_title}}
                             </td>
                             <td>
-                                <p class="mb-0 mt-4">{{$product->wscp_vat }}</p>
+                                {{$cart->department_title}}
                             </td>
-                            <!-- Add other columns as needed -->
+                            <td>
+                                {{$cart->group_title}}
+                            </td>
+                            <td>
+                                {{$cart->sub_group_title}}
+                            </td>
+                            <td>
+                                {{$cart->quantity}}
+                            </td>
+                            <td>
+                                {{$cart->unit_price}}
+                            </td>
+                            <td>
+                                {{$cart->case}}
+                            </td>
+                            <td>
+                                {{$cart->case}}
+                            </td>
+                            <td>
+                                {{$cart->case_price}}
+                            </td>
+                            <td>
+                                <p>Remove</p>
+                            </td>
+
                         </tr>
                         @endforeach
                     </tbody>
