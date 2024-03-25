@@ -12,6 +12,14 @@
             /* Adjust this value as needed */
             object-fit: cover;
         }
+
+        @media (max-width: 576px) {
+            .col-md-6 {
+                flex: 0 0 33%;
+                /* Three products per row */
+                max-width: 33%;
+            }
+        }
     </style>
 </head>
 

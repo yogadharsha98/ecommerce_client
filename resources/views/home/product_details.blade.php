@@ -8,9 +8,17 @@
     <style type='text/css'>
         .product-image,
         .product-thumbnail {
-            height: 200px;
+            height: 150px;
             /* Adjust this value as needed */
             object-fit: cover;
+        }
+
+        @media (max-width: 576px) {
+            .col-md-6 {
+                flex: 0 0 33%;
+                /* Three products per row */
+                max-width: 33%;
+            }
         }
     </style>
 
@@ -454,8 +462,11 @@
                 </div>
             </div>
             <h1 class="fw-bold mb-5">All products</h1>
-            <div class="row g-3">
+            <div class="row g-1">
+
                 @include('components.products')
+
+
             </div>
         </div>
     </div>

@@ -16,7 +16,14 @@
                 <a href="#" class="text-white"><small class="text-white ms-2">Investor Relations</small></a>
             </div>
         </div>
+
     </div>
+    @if (session('message'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('message') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
     <div class="container px-0">
         <nav class="navbar navbar-light bg-white navbar-expand-xl">
             <a href="/" class="navbar-brand">
@@ -33,7 +40,7 @@
                     <a href="shop.html" class="nav-item nav-link">Promotions</a>
                     <a href="shop.html" class="nav-item nav-link">Services</a>
                     <a href="shop.html" class="nav-item nav-link">Ordering Tools</a>
-                    <a href="shop.html" class="nav-item nav-link">My Family Booker</a>
+                    <a href="shop.html" class="nav-item nav-link">Family Booker</a>
                     {{-- <a href="shop-detail.html" class="nav-item nav-link">Shop Detail</a> --}}
                     {{-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
@@ -59,8 +66,8 @@
 
                     @auth('customer')
                     @if (session('customer'))
-                    <div class="d-flex gap-1">
-                        <p class="font-bold">
+                    <div class="d-flex gap-2">
+                        <p class="mt-2">
                             {{ session('customer')->name }}
                         </p>
                         <form class="inline" method="Post" action="/logout">
@@ -75,12 +82,7 @@
                     @else
                     <a href="/login" class="my-auto">
                         {{-- <i class="fa fa-sign-in fa-2x"></i> --}}
-                        <i class="fas fa-sign-in"></i> Sign In
-                    </a>
-
-                    <a href="/register" class="my-auto me-1">
-                        {{-- <i class="fa fa-sign-in fa-2x"></i> --}}
-                        <i class="fas fa-sign-in"></i> Sign Up
+                        <button class="btn btn-warning">SignIn</button>
                     </a>
                     @endauth
 

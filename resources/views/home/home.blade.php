@@ -18,16 +18,20 @@
             /* Adjust this value as needed */
             object-fit: cover;
         }
+
+        /* For small screens (smartphones), display 2 products per row */
+        @media (max-width: 576px) {
+            .col-md-6 {
+                flex: 0 0 33%;
+                /* Three products per row */
+                max-width: 33%;
+            }
+        }
     </style>
 </head>
 
 <body>
-    @if (session('message'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('message') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    @endif
+
 
     <!-- Navbar start -->
     @include('components.navbar')

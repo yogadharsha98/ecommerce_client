@@ -12,7 +12,7 @@
                         <div class="col-lg-12">
                             <div class="row g-4">
                                 @foreach($data as $data)
-                                <div class="col-md-3 col-lg-4 col-xl-2 h-100">
+                                <div class="col-md-6 col-lg-4 col-xl-2 h-100">
                                     <div class="rounded position-relative fruite-item" style="height: 100%;">
                                         <a href="{{url('category',$data->id)}}">
                                             <div class="fruite-img" style="height: 100%;">
@@ -41,10 +41,10 @@
                         <div class="col-lg-12">
                             <div class="row g-4">
                                 @foreach($products as $product)
-                                <div class="col-md-3 col-lg-4 col-xl-2 h-100">
-                                    <div class="rounded position-relative fruite-item border border-secondary "
+                                <div class="col-md-6 col-lg-3 col-xl-2">
+                                    <!-- Adjusted column classes -->
+                                    <div class="rounded position-relative fruite-item border border-secondary"
                                         style="height: 100%;">
-
                                         <a href="{{url('product_details',$product->id)}}">
                                             {{-- Retrieve the main product image --}}
                                             <div class="fruite-img position-relative">
@@ -53,7 +53,6 @@
                                                     class="img-fluid w-100 rounded-top product-image"
                                                     alt="Product Image" style="position: relative;">
                                                 <!-- Ensure the image container has relative positioning -->
-
                                                 @endif
                                             </div>
 
@@ -66,18 +65,17 @@
                                             @endif
                                         </a>
 
-                                        <div class="p-2  rounded-bottom">
+                                        <div class="p-2 rounded-bottom">
                                             <strong>
                                                 <p style="font-size: 10px;">{{$product->product_name}}</p>
                                             </strong>
-
                                         </div>
                                     </div>
                                 </div>
                                 @endforeach
                             </div>
-
                         </div>
+
                     </div>
                 </div>
 

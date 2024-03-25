@@ -12,6 +12,14 @@
             /* Adjust this value as needed */
             object-fit: cover;
         }
+
+        @media (max-width: 576px) {
+            .col-md-6 {
+                flex: 0 0 33%;
+                /* Three products per row */
+                max-width: 33%;
+            }
+        }
     </style>
 </head>
 
@@ -211,9 +219,9 @@
                         <div class="col-lg-9">
                             <div class="row g-4">
                                 @foreach ($groups as $group)
-                                <div class="col-md-6 col-lg-6 col-xl-3 h-25">
+                                <div class="col-md-6 col-lg-6 col-xl-3 h-100">
                                     <div class="rounded position-relative fruite-item border border-secondary">
-                                        <div class="fruite-img" style="height: 200px;">
+                                        <div class="fruite-img" style="height: 130px;">
                                             <!-- Adjust the height as needed -->
                                             <a href="{{ route('subgroup', ['id' => $group->id]) }}">
                                                 <img src="{{ $group->image }}"

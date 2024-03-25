@@ -12,6 +12,14 @@
             /* Adjust this value as needed */
             object-fit: cover;
         }
+
+        @media (max-width: 576px) {
+            .col-md-6 {
+                flex: 0 0 33%;
+                /* Three products per row */
+                max-width: 33%;
+            }
+        }
     </style>
 </head>
 
@@ -211,9 +219,9 @@
                             <div class="row g-4">
                                 @foreach ($departments as $department)
 
-                                <div class="col-md-3 col-lg-4 col-xl-3 h-25">
+                                <div class="col-md-6 col-lg-4 col-xl-3 h-25">
                                     <div class="rounded position-relative fruite-item border border-secondary">
-                                        <div class="fruite-img" style="height: 200px;">
+                                        <div class="fruite-img" style="height: 130px;">
                                             <!-- Adjust the height as needed -->
                                             <a href="{{url('category',$department->id)}}">
                                                 <img src="{{ $department->image }}"

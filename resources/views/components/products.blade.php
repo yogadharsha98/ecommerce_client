@@ -1,5 +1,5 @@
 @foreach ($products as $product)
-<div class="col-md-3 col-lg-3 col-xl-3 h-20">
+<div class="col-md-6 col-lg-3 col-xl-3 h-20">
     <div class="rounded position-relative fruite-item border border-secondary">
         <a href="{{url('product_details',$product->id)}}">
             {{-- Retrieve the main product image --}}
