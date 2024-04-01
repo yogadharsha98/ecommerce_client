@@ -25,6 +25,7 @@
 
 <body>
 
+
     <!-- Navbar start -->
     @include('components.navbar')
     <!-- Navbar End -->
@@ -38,7 +39,7 @@
     <!-- Single Page Header start -->
     <div class="container-fluid page-header py-5" style="background-image: url('img/hero-img-1.png');">
 
-        <h1 class="text-center text-white display-6">All sub groups</h1>
+        <h1 class="text-center text-white display-6">All products</h1>
 
     </div>
     <!-- Single Page Header End -->
@@ -103,6 +104,7 @@
                                         <div class="rounded me-4 mb-3" style="width: 100px; height: 100px;">
                                             <a href="{{url('product_details',$pro->id)}}">
                                                 @if($pro->productImages->count() > 0)
+
                                                 <img src="{{ asset($pro->productImages->first()->large_image) }}"
                                                     class="img-fluid rounded" alt="Product Image">
                                                 <!-- Ensure the image container has relative positioning -->
@@ -117,6 +119,7 @@
                                                 </div>
                                                 @endif
                                             </a>
+
                                         </div>
                                         <div>
                                             <h6 class="mb-2">{{$pro->product_name}}</h6>
@@ -130,7 +133,6 @@
                                     @endforeach
 
                                 </div>
-
                                 <div class="col-lg-12">
                                     <div class="position-relative">
                                         <img src="img/banner-fruits.jpg" class="img-fluid w-100 rounded" alt="">
@@ -144,27 +146,10 @@
                         </div>
                         <div class="col-lg-9">
                             <div class="row g-4">
-                                @foreach ($subgroups as $subgroup)
-                                <div class="col-md-6 col-lg-6 col-xl-3 h-25">
-                                    <div class="rounded position-relative fruite-item border border-secondary">
-                                        {{-- <div class="fruite-img" style="height: 200px;">
-                                            <!-- Adjust the height as needed -->
-                                            <img src="{{ $subgroup->image }}"
-                                                class="img-fluid w-100 h-100 object-fit-cover rounded-top" alt="">
-                                        </div> --}}<a href="{{ route('subgroup.products', ['id' => $subgroup->id]) }}">
-                                            <div class="p-2 border-top-0 rounded-bottom">
-                                                <p>{{$subgroup->sub_group_title}}</p>
-
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                @endforeach
-
 
                                 <h1>All Products</h1>
                                 @include('components.products')
+
 
 
                                 <div class="col-12">

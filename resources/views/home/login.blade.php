@@ -19,26 +19,15 @@
         @endif
     </div>
 
-    <div class="container-fluid">
-        <div class="container topbar bg-primary ">
-            <div class="d-flex justify-content-between">
-                <div class="top-info ps-2">
-                    <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#"
-                            class="text-white">123 Street, New York</a></small>
-                    <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
-                            class="text-white">Email@Example.com</a></small>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
-    <div class="container mt-5">
+
+    <div class="container" style="margin-top: 120px">
 
         <form style="max-width: 400px; margin: 0 auto;" method="Post" action="/customer/authenticate">
             @csrf
             <div class="text-center">
-                <h5 class="mt-5 mb-2">Login</h5>
+                <h5 class="mb-2" style="margin-top:80px">Login</h5>
                 <p class="mb-2">Log into your account</p>
             </div>
             <div class="mb-3">
@@ -75,10 +64,6 @@
 
     <!-- Copyright End -->
 
-
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
-            class="fa fa-arrow-up"></i></a>
 
 
     <!-- JavaScript Libraries -->

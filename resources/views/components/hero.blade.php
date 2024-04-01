@@ -1,7 +1,15 @@
 <div class="container-fluid mb-5 hero-header">
     <div class="container-fluid px-0">
-        <div class="row g-5 align-items-center">
-            <div class="col-md-12 col-lg-12">
+        <div class="row align-items-center" style="background-color: rgb(255, 121, 10)">
+            <div class="col-md-12 col-lg-3 align-items-start p-4">
+
+                <strong>
+                    <h1 style="font-size: 60px">Welcome!</h1>
+                    <h3 class="text-light">Let's experience our best wholesale services</h3>
+                </strong>
+
+            </div>
+            <div class="col-md-12 col-lg-9">
                 <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
                     <div class="carousel-inner" role="listbox">
                         @foreach ($slider as $index => $sliderItem)

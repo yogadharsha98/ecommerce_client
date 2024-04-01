@@ -1,23 +1,5 @@
 <div class="container-fluid fixed-top">
-    <div class="container topbar bg-primary d-none d-lg-block">
 
-        <div class="d-flex justify-content-between">
-            <div class="top-info ps-2">
-                <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#"
-                        class="text-white">123 Street, New York</a></small>
-                <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
-                        class="text-white">Email@Example.com</a></small>
-            </div>
-            <div class="top-link pe-2">
-                <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
-                <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
-                <a href="#" class="text-white"><small class="text-white ms-2">Legal</small>/</a>
-                <a href="#" class="text-white"><small class="text-white ms-2">Sustainability</small>/</a>
-                <a href="#" class="text-white"><small class="text-white ms-2">Investor Relations</small></a>
-            </div>
-        </div>
-
-    </div>
     @if (session('message'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('message') }}
@@ -36,22 +18,26 @@
             <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                 <div class="navbar-nav mx-auto">
                     <a href="/" class="nav-item nav-link active">Home</a>
-                    <a href="{{url('/departments')}}" class="nav-item nav-link">Products</a>
-                    <a href="shop.html" class="nav-item nav-link">Promotions</a>
-                    <a href="shop.html" class="nav-item nav-link">Services</a>
-                    <a href="shop.html" class="nav-item nav-link">Ordering Tools</a>
-                    <a href="shop.html" class="nav-item nav-link">Family Booker</a>
-                    {{-- <a href="shop-detail.html" class="nav-item nav-link">Shop Detail</a> --}}
-                    {{-- <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <a href="{{url('/products')}}" class="nav-item nav-link">Products</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Categories</a>
                         <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                            <a href="cart.html" class="dropdown-item">Cart</a>
-                            <a href="chackout.html" class="dropdown-item">Chackout</a>
-                            <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                            <a href="404.html" class="dropdown-item">404 Page</a>
+
+                            <ul class="dropdown-menu">
+
+                                @foreach($departments as $de)
+                                <li><a href="{{ url('category', $de->id) }}" class="dropdown-item">{{
+                                        $de->department_title }}</a></li>
+                                @endforeach
+                                <li><a href="{{url('/departments')}}" class="dropdown-item">All categories</a></li>
+                            </ul>
                         </div>
-                    </div> --}}
-                    {{-- <a href="contact.html" class="nav-item nav-link">Contact</a> --}}
+                    </div>
+
+                    <a href="{{url('contactus')}}" class="nav-item nav-link">Contact</a>
+
+                    <a href="{{url('show_order')}}" class="nav-item nav-link">Orders</a>
+
                 </div>
                 <div class="d-flex m-3 me-0">
                     <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
@@ -66,18 +52,21 @@
 
                     @auth('customer')
                     @if (session('customer'))
-                    <div class="d-flex gap-2">
-                        <p class="mt-2">
-                            {{ session('customer')->name }}
-                        </p>
-                        <form class="inline" method="Post" action="/logout">
-                            @csrf
-                            <button type="submit" class="btn btn-warning">
-                                Logout
-                            </button>
 
-                        </form>
-                    </div>
+                    <a href="{{url('myaccount')}}" class="my-auto">
+                        <i class="fas fa-user fa-2x"></i>
+                    </a>
+                    <p class="">
+                        {{ session('customer')->name }}
+                    </p>
+                    <form class="inline ms-4" method="Post" action="/logout">
+                        @csrf
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                        <button type="submit" class="btn btn-warning">
+                            Logout
+                        </button>
+
+                    </form>
                     @endif
                     @else
                     <a href="/login" class="my-auto">

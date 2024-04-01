@@ -39,11 +39,7 @@
     <!-- Single Page Header start -->
     <div class="container-fluid page-header py-5" style="background-image: url('img/hero-img-1.png');">
         <h1 class="text-center text-white display-6">Product Details</h1>
-        <ol class="breadcrumb justify-content-center mb-0">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Pages</a></li>
-            <li class="breadcrumb-item active text-white">Shop Detail</li>
-        </ol>
+
     </div>
     <!-- Single Page Header End -->
 
@@ -77,67 +73,65 @@
                         </div>
 
                         <div class="col-lg-6">
-                            <form action="{{url('add_cart',$product_details->id)}}" method="Post">
+                            <form id="addToCartForm" action="{{ url('add_cart', $product_details->id) }}" method="POST">
                                 @csrf
-                                <h4 class="fw-bold mb-3">{{$product_details->product_name}}</h4>
-                                {{-- <p class="mb-3">Category: Vegetables</p> --}}
+                                <h4 class="fw-bold mb-3">{{ $product_details->product_name }}</h4>
+
                                 <div class="d-flex gap-5">
-                                    <h5 class="fw-bold mb-3" style="color: red"> <i class="fas fa-pound-sign"></i>
-                                        {{ $product_details->unit_price }}</h5>
-                                    <input type="number" name="quantity" value="1" min="1"
+                                    <h5 class="fw-bold mb-3" style="color: red">
+                                        <i class="fas fa-pound-sign"></i>
+                                        {{ $product_details->unit_price }}
+                                    </h5>
+                                    <input type="number" name="quantity" value="1" min="0"
                                         style="width:80px;height:30px;margin-left:60px">
                                 </div>
 
                                 <div class="d-flex align-items-center mb-3 gap-4">
-                                    <h5 class="mr-3">Case of {{$product_details->packsize}} for</h5>
-                                    <h5 style="color: red"><i class="fas fa-pound-sign"></i>
-                                        {{ $product_details->case_price }}</h5>
-                                </div>
 
-
-                                {{-- <div class="d-flex mb-4">
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star"></i>
-                                </div> --}}
-
-
-
-                                {{-- <div class="input-group-btn">
-                                    <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                        <i class="fa fa-minus"></i>
-                                    </button>
-                                </div>
-                                <input type="text" class="form-control form-control-sm text-center border-0" />
-                                <div class="input-group-btn">
-                                    <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                </div> --}}
-
-                                <div class="d-flex  gap-5">
-                                    <h5>Case </h5>
+                                    <h5 style="color: red">
+                                        <i class="fas fa-pound-sign"></i>
+                                        {{ $product_details->case_price }}
+                                    </h5>
                                     <input type="number" name="case_quantity" value="1" min="0"
-                                        style="width:80px;height:30px;">
+                                        style="width:80px;height:30px; margin-left:73px;">
                                 </div>
 
-                                {{-- <div class="d-flex  gap-5">
-                                    <h5>Bulk Quantity </h5>
-                                    <input type="number" name="bulk_quantity" value="1" min="0"
-                                        style="width:80px;height:30px;">
-                                </div> --}}
+
                                 <br />
 
-                                <p>{{$product_details->barcode_sku}}</p>
-                                <p class="mb-3">Department: {{$product_details->department_title}}</p>
-                                <p class="mb-3">Group: {{$product_details->group_title}}</p>
-                                <p class="mb-3">Subgroup: {{$product_details->sub_group_title}}</p>
+                                <p class="text-primary">Barcode: {{ $product_details->barcode_sku }}</p>
+                                <div class="d-flex gap-2">
+                                    <input type="checkbox" class="btn-check" id="bulk1" name="bulk1" autocomplete="off">
+                                    <label class="btn btn-outline-secondary" for="bulk1">Bulk 1</label><br>
+
+                                    <input type="checkbox" class="btn-check" id="bulk2" name="bulk2" autocomplete="off">
+                                    <label class="btn btn-outline-secondary" for="bulk2">Bulk 2</label><br>
+
+                                    <input type="checkbox" class="btn-check" id="bulk3" name="bulk3" autocomplete="off">
+                                    <label class="btn btn-outline-secondary" for="bulk3">Bulk 3</label><br>
+
+                                </div>
+
+
 
                                 <input type="submit" value="Add to cart"
-                                    class="btn border border-secondary rounded-pill mt-3 px-4 py-2 mb-4 text-primary" />
+                                    class="btn border border-secondary rounded-pill mt-3 px-4 py-2 mb-4 text-primary">
                             </form>
+
+                            <script>
+                                document.getElementById('addToCartForm').addEventListener('submit', function(event) {
+                                    var quantity = document.getElementsByName('quantity')[0].value;
+                                    var caseQuantity = document.getElementsByName('case_quantity')[0].value;
+                                    var bulk1Checked = document.getElementsByName('bulk1')[0].checked;
+                                    var bulk2Checked = document.getElementsByName('bulk2')[0].checked;
+                                    var bulk3Checked = document.getElementsByName('bulk3')[0].checked;
+                            
+                                    if (parseInt(quantity) === 0 && parseInt(caseQuantity) === 0 && !bulk1Checked && !bulk2Checked && !bulk3Checked ) {
+                                        event.preventDefault();
+                                        alert('Please select a quantity or a case quantity, or check at least one bulk option.');
+                                    }
+                                });
+                            </script>
                         </div>
 
                         <div class="col-lg-12">
@@ -161,46 +155,92 @@
                                                 <div
                                                     class="row bg-light align-items-center text-center justify-content-center py-2">
                                                     <div class="col-6">
-                                                        <p class="mb-0">Weight</p>
+                                                        <p class="mb-0">Unit price</p>
                                                     </div>
                                                     <div class="col-6">
-                                                        <p class="mb-0">1 kg</p>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="row text-center align-items-center justify-content-center py-2">
-                                                    <div class="col-6">
-                                                        <p class="mb-0">Country of Origin</p>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <p class="mb-0">Agro Farm</p>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="row bg-light text-center align-items-center justify-content-center py-2">
-                                                    <div class="col-6">
-                                                        <p class="mb-0">Quality</p>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <p class="mb-0">Organic</p>
+                                                        <p class="mb-0" style="color: red"> <i
+                                                                class="fas fa-pound-sign"></i>{{
+                                                            $product_details->unit_price }}</p>
                                                     </div>
                                                 </div>
                                                 <div
                                                     class="row text-center align-items-center justify-content-center py-2">
                                                     <div class="col-6">
-                                                        <p class="mb-0">Сheck</p>
+                                                        <p class="mb-0">Per case</p>
                                                     </div>
                                                     <div class="col-6">
-                                                        <p class="mb-0">Healthy</p>
+                                                        <p class="mb-0">{{ $product_details->packsize }} packs</p>
                                                     </div>
                                                 </div>
                                                 <div
                                                     class="row bg-light text-center align-items-center justify-content-center py-2">
                                                     <div class="col-6">
-                                                        <p class="mb-0">Min Weight</p>
+                                                        <p class="mb-0">Case price</p>
                                                     </div>
                                                     <div class="col-6">
-                                                        <p class="mb-0">250 Kg</p>
+                                                        <p class="mb-0" style="color: red"> <i
+                                                                class="fas fa-pound-sign"></i>{{
+                                                            $product_details->case_price }}</p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="row text-center align-items-center justify-content-center py-2">
+                                                    <div class="col-6">
+                                                        <p class="mb-0">Bulk 1</p>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <p class="mb-0">{{ $product_details->bcqty_1 }}</p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="row bg-light text-center align-items-center justify-content-center py-2">
+                                                    <div class="col-6">
+                                                        <p class="mb-0">Bulk 1 price</p>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <p class="mb-0" style="color: red"> <i
+                                                                class="fas fa-pound-sign"></i>{{
+                                                            $product_details->bcp_1 }}</p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="row text-center align-items-center justify-content-center py-2">
+                                                    <div class="col-6">
+                                                        <p class="mb-0">Bulk 2</p>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <p class="mb-0">{{ $product_details->bcqty_2 }}</p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="row bg-light text-center align-items-center justify-content-center py-2">
+                                                    <div class="col-6">
+                                                        <p class="mb-0">Bulk 2 price</p>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <p class="mb-0" style="color: red"> <i
+                                                                class="fas fa-pound-sign"></i>{{
+                                                            $product_details->bcp_2 }}</p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="row text-center align-items-center justify-content-center py-2">
+                                                    <div class="col-6">
+                                                        <p class="mb-0">Bulk 3</p>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <p class="mb-0">{{ $product_details->bcqty_3 }}</p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="row text-center align-items-center justify-content-center py-2">
+                                                    <div class="col-6">
+                                                        <p class="mb-0">Bulk 3 price</p>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <p class="mb-0" style="color: red"> <i
+                                                                class="fas fa-pound-sign"></i>{{
+                                                            $product_details->bcp_3 }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -319,7 +359,7 @@
                                         <div class="d-flex justify-content-between fruite-name">
                                             <a
                                                 href="{{url('category',$department->id)}}">{{$department->department_title}}</a>
-                                            <span>(3)</span>
+
                                         </div>
                                     </li>
                                     @endforeach
@@ -328,126 +368,38 @@
                             </div>
                         </div>
                         <div class="col-lg-12">
-                            <h4 class="mb-4">Featured products</h4>
+                            <h4 class="mb-3">Featured products</h4>
+                            @foreach($featuredProducts as $pro)
                             <div class="d-flex align-items-center justify-content-start">
-                                <div class="rounded" style="width: 100px; height: 100px;">
-                                    <img src="img/featur-1.jpg" class="img-fluid rounded" alt="Image">
+                                <div class="rounded me-4 mb-3" style="width: 100px; height: 100px;">
+                                    <a href="{{url('product_details',$pro->id)}}">
+                                        @if($pro->productImages->count() > 0)
+                                        <img src="{{ asset($pro->productImages->first()->large_image) }}"
+                                            class="img-fluid rounded" alt="Product Image">
+                                        <!-- Ensure the image container has relative positioning -->
+
+                                        @endif
+
+                                        {{-- Retrieve the product thumbnail --}}
+                                        @if($pro->productThumbnails->count() > 0)
+                                        <div class="thumbnail">
+                                            <img src="{{ asset($pro->productThumbnails->first()->thumbnail_image) }}"
+                                                class="img-thumbnail product-thumbnail" alt="Product Thumbnail">
+                                        </div>
+                                        @endif
+                                    </a>
                                 </div>
                                 <div>
-                                    <h6 class="mb-2">Big Banana</h6>
+                                    <h6 class="mb-2">{{$pro->product_name}}</h6>
+
                                     <div class="d-flex mb-2">
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                    <div class="d-flex mb-2">
-                                        <h5 class="fw-bold me-2">2.99 $</h5>
+                                        <h5 class="fw-bold me-2">{{$pro->unit_price}}</h5>
                                         <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rounded" style="width: 100px; height: 100px;">
-                                    <img src="img/featur-2.jpg" class="img-fluid rounded" alt="">
-                                </div>
-                                <div>
-                                    <h6 class="mb-2">Big Banana</h6>
-                                    <div class="d-flex mb-2">
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                    <div class="d-flex mb-2">
-                                        <h5 class="fw-bold me-2">2.99 $</h5>
-                                        <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rounded" style="width: 100px; height: 100px;">
-                                    <img src="img/featur-3.jpg" class="img-fluid rounded" alt="">
-                                </div>
-                                <div>
-                                    <h6 class="mb-2">Big Banana</h6>
-                                    <div class="d-flex mb-2">
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                    <div class="d-flex mb-2">
-                                        <h5 class="fw-bold me-2">2.99 $</h5>
-                                        <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                    <img src="img/vegetable-item-4.jpg" class="img-fluid rounded" alt="">
-                                </div>
-                                <div>
-                                    <h6 class="mb-2">Big Banana</h6>
-                                    <div class="d-flex mb-2">
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                    <div class="d-flex mb-2">
-                                        <h5 class="fw-bold me-2">2.99 $</h5>
-                                        <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                    <img src="img/vegetable-item-5.jpg" class="img-fluid rounded" alt="">
-                                </div>
-                                <div>
-                                    <h6 class="mb-2">Big Banana</h6>
-                                    <div class="d-flex mb-2">
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                    <div class="d-flex mb-2">
-                                        <h5 class="fw-bold me-2">2.99 $</h5>
-                                        <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                    <img src="img/vegetable-item-6.jpg" class="img-fluid rounded" alt="">
-                                </div>
-                                <div>
-                                    <h6 class="mb-2">Big Banana</h6>
-                                    <div class="d-flex mb-2">
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                    <div class="d-flex mb-2">
-                                        <h5 class="fw-bold me-2">2.99 $</h5>
-                                        <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center my-4">
-                                <a href="#"
-                                    class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">Vew
-                                    More</a>
-                            </div>
+                            @endforeach
+
                         </div>
                         <div class="col-lg-12">
                             <div class="position-relative">
