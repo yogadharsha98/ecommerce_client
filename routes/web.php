@@ -17,7 +17,6 @@ Route::post('/add_cart/{id}', [HomeController::class, 'add_cart']);
 Route::get('/show_cart', [HomeController::class, 'show_cart']);
 Route::get('/remove_cart/{id}', [HomeController::class, 'remove_cart']);
 
-Route::get('/place_order', [HomeController::class, 'add_order']);
 
 Route::get('/show_order', [HomeController::class, 'show_order']);
 
@@ -25,7 +24,11 @@ Route::get('/cancel_order/{id}', [HomeController::class, 'cancel_order']);
 
 Route::get('/product_search', [HomeController::class, 'product_search']);
 
+//show srtipe
+Route::get('/stripe/{total_amount}', [HomeController::class, 'stripe']);
 
+//store payment
+Route::post('stripe/{total_amount}', [HomeController::class, 'stripePost'])->name('stripe.post');
 
 //contact
 Route::get('/contactus', [HomeController::class, 'show_contact']);

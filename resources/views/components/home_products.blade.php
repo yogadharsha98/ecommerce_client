@@ -25,29 +25,31 @@
                         @endif
                     </a>
 
-                    <div class="p-2 rounded-bottom">
+                    <div class="rounded-bottom">
                         <strong>
                             <p style="font-size: 12px;">{{$product->product_name}}</p>
+                            <p style="font-size: 25px; color:red"> <i
+                                    class="fas fa-pound-sign"></i>{{$product->unit_price}}</p>
                         </strong>
-                        <a href="{{url('product_details',$product->id)}}">
-                            <div class="gap-2 d-flex flex-column align-items-center">
-                                <button class="btn btn-outline-secondary bulk-info w-100"
-                                    style="display: none; font-size:14px;">
-                                    {{$product->bcqty_1}} bulks
-                                    <i class="fas fa-pound-sign"></i>
-                                    {{$product->bcp_1}}</button>
-                                <button class="btn btn-outline-secondary bulk-info w-100"
-                                    style="display: none; font-size:14px;">
-                                    {{$product->bcqty_2}} bulks
-                                    <i class="fas fa-pound-sign"></i>
-                                    {{$product->bcp_2}}</button>
-                                <button class="btn btn-outline-secondary bulk-info w-100"
-                                    style="display: none;font-size:14px;">
-                                    {{$product->bcqty_3}} bulks
-                                    <i class="fas fa-pound-sign"></i>
-                                    {{$product->bcp_3}}</button>
-                            </div>
-                        </a>
+
+                        <div class="">
+                            <p class=" bulk-info" style="display: none; font-size:14px;">
+                                {{$product->bcqty_1}} bulks
+                                <i class="fas fa-pound-sign"></i>
+                                {{$product->bcp_1}}
+                            </p>
+                            <p class=" bulk-info " style="display: none; font-size:14px;">
+                                {{$product->bcqty_2}} bulks
+                                <i class="fas fa-pound-sign"></i>
+                                {{$product->bcp_2}}
+                            </p>
+                            <p class=" bulk-info " style="display: none;font-size:14px;">
+                                {{$product->bcqty_3}} bulks
+                                <i class="fas fa-pound-sign"></i>
+                                {{$product->bcp_3}}
+                            </p>
+                        </div>
+
                     </div>
                 </div>
             </div>

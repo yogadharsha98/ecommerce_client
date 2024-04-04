@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Session;
+use Stripe;
 use App\Models\Banner;
 use App\Models\Cart;
 use App\Models\Carts;
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 
+
 class HomeController extends Controller
 {
     public function index()
@@ -27,8 +30,9 @@ class HomeController extends Controller
         $products = Product::all();
         $slider = Slider::all();
 
+        $featuredProducts = Product::where('featured', true)->get();
 
-        return view('home.home', compact('data', 'departments', 'products', 'slider'));
+        return view('home.home', compact('data', 'departments', 'products', 'slider', 'featuredProducts'));
     }
 
     public function show_all_products()
@@ -160,7 +164,6 @@ class HomeController extends Controller
         }
     }
 
-
     public function add_cart(Request $request, $id)
     {
         if (Auth::guard('customer')->check()) {
@@ -168,48 +171,68 @@ class HomeController extends Controller
             $customer = Auth::guard('customer')->user();
             $product = Product::find($id);
 
-            // Create cart for larger screens
-            $cart = new Carts();
-            $cart->name = $customer->name;
-            $cart->email = $customer->email;
-            $cart->phone = $customer->phone;
-            $cart->address = $customer->address;
-            $cart->user_id = $customer->id;
-            // Assign product data to cart
-            $cart->product_id = $product->id;
-            $cart->product_title = $product->product_name;
-            $cart->department_title = $product->department_title;
-            $cart->group_title = $product->group_title;
-            $cart->sub_group_title = $product->sub_group_title;
-            $cart->quantity = $request->quantity;
-            $cart->case = $request->case_quantity;
-            // Calculate unit price
-            $cart->unit_price = $product->discount_price != null ? $product->discount_price * $request->quantity : $product->unit_price * $request->quantity;
-            // Calculate case price
-            $cart->case_price = $product->case_price * $request->case_quantity;
-            // Check and calculate total bulk prices and quantities
-            if ($request->bulk1) {
-                $cart->bcqty1 = $product->bcqty_1;
-                $cart->total_bulk1_price = $product->bcp_1 * $product->bcqty_1;
-            }
-            if ($request->bulk2) {
-                $cart->bcqty2 = $product->bcqty_2;
-                $cart->total_bulk2_price = $product->bcp_2 * $product->bcqty_2;
-            }
-            if ($request->bulk3) {
-                $cart->bcqty3 = $product->bcqty_3;
-                $cart->total_bulk3_price = $product->bcp_3 * $product->bcqty_3;
-            }
-            // Save cart details
-            $cart->save();
+            // Check if the product already exists in the cart
+            $existingCartItem = Carts::where('user_id', $customer->id)
+                ->where('product_id', $product->id)
+                ->first();
 
+            if ($existingCartItem) {
+                // Update the existing cart item with new quantities
+                $existingCartItem->quantity = $request->quantity;
+                $existingCartItem->case = $request->case_quantity;
+                // Recalculate prices based on new quantities
+                $existingCartItem->unit_price = $product->discount_price != null ? $product->discount_price * $request->quantity : $product->unit_price * $request->quantity;
+                $existingCartItem->case_price = $product->case_price * $request->case_quantity;
+                if ($request->bulk1) {
+                    $existingCartItem->bcqty1 = $product->bcqty_1;
+                    $existingCartItem->total_bulk1_price = $product->bcp_1 * $product->bcqty_1;
+                }
+                if ($request->bulk2) {
+                    $existingCartItem->bcqty2 = $product->bcqty_2;
+                    $existingCartItem->total_bulk2_price = $product->bcp_2 * $product->bcqty_2;
+                }
+                if ($request->bulk3) {
+                    $existingCartItem->bcqty3 = $product->bcqty_3;
+                    $existingCartItem->total_bulk3_price = $product->bcp_3 * $product->bcqty_3;
+                }
+                // Save the updated cart item
+                $existingCartItem->save();
+            } else {
+                // Create a new cart item
+                $cart = new Carts();
+                $cart->name = $customer->name;
+                $cart->email = $customer->email;
+                $cart->phone = $customer->phone;
+                $cart->address = $customer->address;
+                $cart->user_id = $customer->id;
+                $cart->product_id = $product->id;
+                $cart->product_title = $product->product_name;
+                $cart->department_title = $product->department_title;
+                $cart->group_title = $product->group_title;
+                $cart->vat = $product->vat;
+                $cart->por = $product->por;
+                $cart->rsp = $product->rsp;
+                $cart->sub_group_title = $product->sub_group_title;
+                $cart->quantity = $request->quantity;
+                $cart->case = $request->case_quantity;
+                $cart->unit_price = $product->discount_price != null ? $product->discount_price * $request->quantity : $product->unit_price * $request->quantity;
+                $cart->case_price = $product->case_price * $request->case_quantity;
+                if ($request->bulk1) {
+                    $cart->bcqty1 = $product->bcqty_1;
+                    $cart->total_bulk1_price = $product->bcp_1 * $product->bcqty_1;
+                }
+                if ($request->bulk2) {
+                    $cart->bcqty2 = $product->bcqty_2;
+                    $cart->total_bulk2_price = $product->bcp_2 * $product->bcqty_2;
+                }
+                if ($request->bulk3) {
+                    $cart->bcqty3 = $product->bcqty_3;
+                    $cart->total_bulk3_price = $product->bcp_3 * $product->bcqty_3;
+                }
+                $cart->save();
+            }
 
-            return redirect()->back()->with('message', 'Product added to the cart')
-                ->with('quantity', $request->quantity)
-                ->with('case_quantity', $request->case_quantity)
-                ->with('bulk1', $request->bulk1)
-                ->with('bulk2', $request->bulk2)
-                ->with('bulk3', $request->bulk3);
+            return redirect()->back()->with('message', 'Product added to the cart');
         } else {
             // User is not authenticated, redirect to login page
             return redirect('/login');
@@ -225,8 +248,51 @@ class HomeController extends Controller
     }
 
 
-    public function add_order()
+
+    public function show_order()
     {
+        $departments = Department::all();
+
+        if (Auth::guard('customer')->check()) {
+            // User is authenticated, retrieve user data
+            $customer = Auth::guard('customer')->user();
+            $customer_id = $customer->id;
+
+            $order = Orders::where('user_id', $customer_id)->with('product')->get();
+
+            return view('home.order', compact('departments', 'order'));
+        } else {
+            return redirect('/login');
+        }
+    }
+
+    public function cancel_order($id)
+    {
+        $order = Orders::find($id);
+
+        $order->delivery_status = 'Order canceled';
+        $order->save();
+        return redirect()->back()->with('message', 'Order canceled');
+    }
+
+    public function stripe($total_amount)
+    {
+        $departments = Department::all();
+        return view('home.stripe', compact('total_amount', 'departments'));
+    }
+
+    public function stripePost(Request $request, $total_amount)
+    {
+
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        Stripe\Charge::create([
+            "amount" => $total_amount * 100,
+            "currency" => "GBP",
+            "source" => $request->stripeToken,
+            "description" => "Thanks for the payment. "
+        ]);
+
         $customer = Auth::guard('customer')->user();
         $customer_id = $customer->id;
 
@@ -266,7 +332,7 @@ class HomeController extends Controller
             $order->vat = $data->vat;
             $order->total_amount = $total_amount;
 
-            $order->payment_status = 'cash on delivery';
+            $order->payment_status = 'Paid';
 
             $order->delivery_status = 'processing';
 
@@ -277,36 +343,10 @@ class HomeController extends Controller
             $cart->delete();
         }
 
-        return redirect()->back()->with('message', 'Order placed successfully! Check your orders');
+        Session::flash('success', 'Payment successful!');
+
+        return back();
     }
-
-    public function show_order()
-    {
-        $departments = Department::all();
-
-        if (Auth::guard('customer')->check()) {
-            // User is authenticated, retrieve user data
-            $customer = Auth::guard('customer')->user();
-            $customer_id = $customer->id;
-
-            $order = Orders::where('user_id', '=', $customer_id)->get();
-
-
-            return view('home.order', compact('departments', 'order'));
-        } else {
-            return redirect('/login');
-        }
-    }
-
-    public function cancel_order($id)
-    {
-        $order = Orders::find($id);
-
-
-        $order->delete();
-        return redirect()->back()->with('message', 'Order canceled');
-    }
-
 
     public function product_search(Request $request)
     {

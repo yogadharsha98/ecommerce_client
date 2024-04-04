@@ -16,10 +16,15 @@
             display: block;
         }
 
+        .vesitable-item {
+            width: 350px;
+            margin-right: 5px;
+            /* Adjust the margin as needed */
+        }
 
         .product-image,
         .product-thumbnail {
-            height: 100px;
+            height: 160px;
             /* Adjust this value as needed */
             object-fit: cover;
         }
@@ -33,6 +38,11 @@
             }
         }
     </style>
+
+    <style>
+
+    </style>
+
 </head>
 
 <body>
@@ -51,6 +61,8 @@
     <!-- Hero Start -->
     @include('components.hero')
     <!-- Hero End -->
+
+    @include('components.featurs_products')
 
     @include('components.home_banner')
 
@@ -86,6 +98,8 @@
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
             class="fa fa-arrow-up"></i></a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
 
     <!-- JavaScript Libraries -->

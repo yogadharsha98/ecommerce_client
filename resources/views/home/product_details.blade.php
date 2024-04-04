@@ -20,6 +20,27 @@
                 max-width: 33%;
             }
         }
+
+        .trapezoid-right {
+            position: relative;
+            width: 100px;
+            height: 30px;
+            background-color: red;
+        }
+
+        .trapezoid-right:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -50px;
+            /* Adjust this value to change the slope */
+            width: 10em;
+            height: 0;
+            border-top: 30px solid red;
+            border-right: 10px solid transparent;
+            /* Match the background color */
+
+        }
     </style>
 
 </head>
@@ -77,25 +98,37 @@
                                 @csrf
                                 <h4 class="fw-bold mb-3">{{ $product_details->product_name }}</h4>
 
-                                <div class="d-flex gap-5">
-                                    <h5 class="fw-bold mb-3" style="color: red">
+                                <div class="d-flex gap-4 align-items-center">
+                                    <h5>Unit: </h5>
+                                    <h5 class="fw-bold" style="color: red">
                                         <i class="fas fa-pound-sign"></i>
                                         {{ $product_details->unit_price }}
                                     </h5>
-                                    <input type="number" name="quantity" value="1" min="0"
-                                        style="width:80px;height:30px;margin-left:60px">
+                                    <div class="d-flex align-items-center gap-2 ms-2" style="width: 120px;">
+                                        <i class="bi bi-dash-circle align-middle" style="font-size: 25px"></i>
+                                        <input type="text" id="unitQuantity" name="quantity"
+                                            class="form-control form-control-sm text-center border-0 align-middle"
+                                            value="0" style="font-size: 15px">
+                                        <i class="bi bi-plus-circle align-middle" style="font-size: 25px"></i>
+
+                                    </div>
                                 </div>
 
-                                <div class="d-flex align-items-center mb-3 gap-4">
-
+                                <div class="d-flex align-items-center mb-3 gap-3 mt-3">
+                                    <h5>Case: </h5>
                                     <h5 style="color: red">
                                         <i class="fas fa-pound-sign"></i>
                                         {{ $product_details->case_price }}
                                     </h5>
-                                    <input type="number" name="case_quantity" value="1" min="0"
-                                        style="width:80px;height:30px; margin-left:73px;">
-                                </div>
+                                    <div class="d-flex gap-2 ms-1" style="width: 120px;">
+                                        <i class="bi bi-dash-circle" style="font-size: 25px"></i>
+                                        <input type="text" id="caseQuantity" name="case_quantity"
+                                            class="form-control form-control-sm text-center border-0" value="0"
+                                            style="font-size: 15px">
+                                        <i class="bi bi-plus-circle " style="font-size: 25px"></i>
 
+                                    </div>
+                                </div>
 
                                 <br />
 
@@ -112,11 +145,32 @@
 
                                 </div>
 
-
-
                                 <input type="submit" value="Add to cart"
                                     class="btn border border-secondary rounded-pill mt-3 px-4 py-2 mb-4 text-primary">
                             </form>
+
+                            <script>
+                                document.querySelectorAll('.bi-plus-circle').forEach(function (button) {
+                                    button.addEventListener('click', function () {
+                                        var inputField = button.parentElement.querySelector('input');
+                                        inputField.value = parseInt(inputField.value) + 1;
+                                    });
+                                });
+                            
+                                document.querySelectorAll('.bi-dash-circle').forEach(function (button) {
+                                    button.addEventListener('click', function () {
+                                        var inputField = button.parentElement.querySelector('input');
+                                        if (parseInt(inputField.value) > 0) {
+                                            inputField.value = parseInt(inputField.value) - 1;
+                                        }
+                                    });
+                                });
+                            </script>
+
+
+
+
+
 
                             <script>
                                 document.getElementById('addToCartForm').addEventListener('submit', function(event) {

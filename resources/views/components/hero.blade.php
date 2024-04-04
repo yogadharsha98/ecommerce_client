@@ -1,4 +1,4 @@
-<div class="container-fluid mb-5 hero-header">
+<div class="container-fluid mb-3 hero-header">
     <div class="container-fluid px-0">
         <div class="row align-items-center" style="background-color: rgb(255, 121, 10)">
             <div class="col-md-12 col-lg-3 align-items-start p-4">

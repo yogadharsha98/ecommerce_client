@@ -38,264 +38,227 @@
     <!-- Cart Page Start -->
     <div class="container-fluid">
         <div class="container py-5">
-            <div class="row">
-                <div class="col-lg-10 mx-auto align-items-center">
-                    @if ($cart->isEmpty())
-                    <div class="d-flex flex-column align-items-center">
-                        <p class="text-center">Your cart is empty</p>
-                        <a href="{{url('departments')}}" class="btn btn-primary">
-                            Continue shopping
-                        </a>
 
-                    </div>
+            {{-- @if ($cart->isEmpty())
+            <div class="d-flex flex-column align-items-center">
+                <p class="text-center">Your cart is empty</p>
+                <a href="{{url('departments')}}" class="btn btn-primary">
+                    Continue shopping
+                </a>
 
-                    @else
+            </div>
+
+            @else
+            {{-- <table class="table d-md-table" style="font-size: 14px">
+                <thead>
+                    <tr>
+                        <th scope="col" class="col-sm-5">Product</th>
+                        <th scope="col" class="col-sm-1">Bulks</th>
+                        <th scope="col" class="col-sm-1">Quantity</th>
+                        <th scope="col" class="col-sm-1">Vat</th>
+                        <th scope="col" class="col-sm-1">Total</th>
+
+                        <th scope="col">Handle</th>
+                    </tr>
+                </thead>
+                <tbody> --}}
+                    {{--
+                    <?php 
+                        $totalCasePrice = 0
+                        $totalUnitPrice = 0
+                        $totalbulk1Price = 0
+                        $totalbulk2Price = 0
+                        $totalbulk3Price = 0
+                        $total_amount = 0
+                    ?>
                     @foreach ($cart as $cartItem)
-                    <div class="row align-items-center gap-4 mb-3 border rounded"
-                        style="background-color: #ffffff; padding: 10px;">
-                        <div class="col-md-3 col-lg-2">
+                    <?php 
+                            $totalUnitPrice += $cartItem->unit_price;
+                            $totalCasePrice += $cartItem->case_price;
+                            $totalbulk1Price += $cartItem->total_bulk1_price;
+                            $totalbulk2Price += $cartItem->total_bulk2_price;
+                            $totalbulk3Price += $cartItem->total_bulk3_price;
+                
+                            $total_amount = $totalUnitPrice + $totalCasePrice + $totalbulk1Price + $totalbulk2Price + $totalbulk3Price;
+                        ?> --}}
+                    {{-- <tr>
+                        <td>
+                            @foreach($cartItem->product_images as $image)
+                            <img src="{{ asset($image->large_image) }}" alt="Product Image" class="product-image">
+                            @endforeach
+                        </td>
+                        <td>
+                            @if(isset($cartItem->bcqty1) && $cartItem->bcqty1 > 0)
+                            Bulk1: {{$cartItem->bcqty1}}
+                            <br />
+                            @endif
+                            @if(isset($cartItem->bcqty2) && $cartItem->bcqty2 > 0)
+                            Bulk2: {{$cartItem->bcqty2}}
+                            <br />
+                            @endif
+                            @if(isset($cartItem->bcqty3) && $cartItem->bcqty3 > 0)
+                            Bulk3:{{$cartItem->bcqty3}}
+                            @endif
+                        </td>
+                        <td>
+                            <!-- Quantity and bulk display -->
+                            @if(isset($cartItem->quantity) && $cartItem->quantity > 0)
+                            Quantity: {{$cartItem->quantity}}
+                            <br />
+                            @endif
+                            @if(isset($cartItem->case) && $cartItem->case > 0)
+                            Case: {{$cartItem->case}}
+                            <br />
+                            @endif
+                        </td>
+                        <td>5%</td>
+                        <td>{{$total_amount}}</td>
+                        {{-- <td style="color: rgb(5, 206, 5)">{{$order->payment_status}}</td> --}}
+                        {{-- <td>
+                            <a class="btn btn-danger" onclick="return confirm('Are you sure to remove this product?')"
+                                style="font-size:15px" href="{{ url('/remove_cart', $cartItem->id) }}">Remove</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            @endif --}}
+            @if ($cart->isEmpty())
+            <div class="d-flex flex-column align-items-center">
+                <p class="text-center">Your cart is empty</p>
+                <a href="{{url('departments')}}" class="btn btn-primary">
+                    Continue shopping
+                </a>
+
+            </div>
+
+            @else
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <?php 
+                        $total_amount = 0;
+                    ?>
+                    @foreach ($cart as $cartItem)
+
+                    <?php 
+                        // Calculate total item price for the current product
+                        $totalItemPrice = $cartItem->unit_price + $cartItem->case_price + $cartItem->total_bulk1_price + $cartItem->total_bulk2_price + $cartItem->total_bulk3_price;
+                
+                        // Calculate total item price with VAT
+                        $totalPriceWithVat = $totalItemPrice + (($cartItem->vat * $cartItem->unit_price) / 100);
+                
+                        // Add total item price with VAT to the total amount
+                        $total_amount += $totalPriceWithVat;
+                    ?>
+                    <div class="row g-1 mb-5 mt-2 border-bottom border-top">
+
+                        <div class="col-lg-2">
                             @foreach($cartItem->product_images as $image)
                             <img src="{{ asset($image->large_image) }}" alt="Product Image" class="product-image">
                             @endforeach
                         </div>
-                        <div class="col-md-3 col-lg-7">
-                            <ul style="list-style-type: none;">
-                                <li style="text-decoration: none; margin-bottom: 10px;">
-                                    <h4 style="color:red">{{ $cartItem->product_title }}</h4>
-                                </li>
-                                @if(isset($cartItem->quantity) && $cartItem->quantity > 0)
-                                <li style="text-decoration: none;margin-bottom: 10px;">Quantity: {{ $cartItem->quantity
-                                    }}</li>
-                                @endif
-                                @if(isset($cartItem->case) && $cartItem->case > 0)
-                                <li style="text-decoration: none;margin-bottom: 10px;">Case: {{ $cartItem->case }}</li>
-                                @endif
-                                @if(isset( $cartItem->unit_price) && $cartItem->unit_price>0)
-                                <li style="text-decoration: none;margin-bottom: 10px;">Unit price:
-                                    <i class="fas fa-pound-sign"></i> {{
-                                    $cartItem->unit_price }}
 
-                                </li>
-
-                                @endif
-                                @if(isset( $cartItem->case_price) && $cartItem->case_price>0)
-                                <li style="text-decoration: none;margin-bottom: 10px;">Case price:
-                                    <i class="fas fa-pound-sign"></i>{{
-                                    $cartItem->case_price }}
-
-                                </li>
-
-                                @endif
+                        <div class="col-lg-3 d-flex flex-column">
+                            <h5>{{$cartItem->product_title}}</h5>
+                            @if(isset($cartItem->case) && $cartItem->case > 0)
+                            Case: {{$cartItem->case}}
+                            <br />
+                            @endif
+                            <div class="trapezoid-right">
                                 @if(isset($cartItem->bcqty1) && $cartItem->bcqty1 > 0)
-                                <li style="text-decoration: none;margin-bottom: 10px;">Bulk 1 quantity: {{
-                                    $cartItem->bcqty1 }}</li>
-                                <li style="text-decoration: none;margin-bottom: 10px;">Total bulk 1 price: <i
-                                        class="fas fa-pound-sign"></i>{{
-                                    $cartItem->total_bulk1_price
-                                    }}
-                                </li>
+                                Bulk1: {{$cartItem->bcqty1}}
+                                <br />
                                 @endif
-                                @if(isset($cartItem->bcqty2) && $cartItem->bcqty2 > 0)
-                                <li style="text-decoration: none;margin-bottom: 10px;">Bulk 2 quantity: {{
-                                    $cartItem->bcqty2 }}</li>
-                                <li style="text-decoration: none;margin-bottom: 10px;">Total bulk 2 price: <i
-                                        class="fas fa-pound-sign"></i> {{
-                                    $cartItem->total_bulk2_price
-                                    }}
-                                </li>
-                                @endif
-                                @if(isset($cartItem->bcqty3) && $cartItem->bcqty3 > 0)
-                                <li style="text-decoration: none;margin-bottom: 10px;">Bulk 3 quantity: {{
-                                    $cartItem->bcqty3 }}</li>
-                                <li style="text-decoration: none;margin-bottom: 10px;">Total bulk 3 price: <i
-                                        class="fas fa-pound-sign"></i>{{
-                                    $cartItem->total_bulk3_price
-                                    }}
-                                </li>
-                                @endif
-                                <!-- Add other product details as list items -->
-                            </ul>
+                            </div>
+                            @if(isset($cartItem->bcqty2) && $cartItem->bcqty2 > 0)
+                            Bulk2: {{$cartItem->bcqty2}}
+                            <br />
+                            @endif
+                            @if(isset($cartItem->bcqty3) && $cartItem->bcqty3 > 0)
+                            Bulk3:{{$cartItem->bcqty3}}
+                            @endif
                         </div>
-                        <div class="col-md-3 col-lg-1">
+
+
+                        <div class="col-lg-2 ">
+                            <form action="{{ url('add_cart', $cartItem->product_id) }}" method="POST">
+                                @csrf
+                                <label for="case_quantity">Case:</label>
+                                <input class="border border-secondary mb-2 " type="number" id="case_quantity"
+                                    name="case_quantity" value="{{$cartItem->case}}">
+                                <br>
+                                <label for="quantity">Quantity:</label>
+                                <input class="border border-secondary  mt-2" type="number" id="quantity" name="quantity"
+                                    value="{{$cartItem->quantity}}">
+                                <br>
+                                <!-- Add hidden inputs for bulk quantities if needed -->
+                                <button type="submit" class="btn btn-secondary mt-2">Update</button>
+                            </form>
+                        </div>
+
+                        <div class="col-lg-1 ">
+                            <p>VAT: {{$cartItem->vat}}%</p>
+                        </div>
+
+                        <div class="col-lg-2 d-flex flex-column">
+                            <p style="color:red"><i class="fas fa-pound-sign "></i>{{$totalItemPrice}} (ex vat)</p>
+                            <p>RSP: <i class="fas fa-pound-sign"></i>{{$cartItem->rsp}}</p>
+                            <p>POR: {{$cartItem->por}}%</p>
+                            <p style="color:red"><i class="fas fa-pound-sign "></i>{{$totalPriceWithVat}} (inc vat)</p>
+                        </div>
+
+                        <div class="col-lg-2 d-flex align-items-center mb-2">
                             <a class="btn btn-danger" onclick="return confirm('Are you sure to remove this product?')"
                                 style="font-size:15px" href="{{ url('/remove_cart', $cartItem->id) }}">Remove</a>
                         </div>
+
                     </div>
                     @endforeach
 
-                </div>
-                <div class="row g-2">
-                    <div class="col-lg-12 d-flex justify-content-end">
-                        <div class="col-lg-3">
-                            <a href="{{url('place_order')}}"
-                                class="btn border-secondary  rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">Proceed
-                                to
-                                Checkout</a>
+                    <div class="row g-2">
+                        <div class="col-lg-12 d-flex justify-content-end">
+                            <div class="col-lg-3">
+                                <h3 style="color:red"><i class="fas fa-pound-sign fs-4 ms-5"></i> {{
+                                    number_format($total_amount, 2) }}</h3>
+                                <a href="{{url('stripe',$total_amount)}}"
+                                    class="btn border-secondary  rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">Proceed
+                                    to Checkout</a>
+                            </div>
                         </div>
-
                     </div>
                 </div>
-                @endif
+
+
             </div>
 
+            @endif
 
-            {{-- <div class="table-responsive">
-                <table class="table d-md-table" style="font-size: 12px">
-                    <thead>
-                        <tr>
-                            <th scope="col">Products</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Case</th>
-                            <th scope="col">Quantity price</th>
-                            <th scope="col">Case price</th>
-                            <th scope="col">Bulk1</th>
-                            <th scope="col">Bulk1 price</th>
-                            <th scope="col">Bulk2</th>
-                            <th scope="col">Bulk2 price</th>
-                            <th scope="col">Bulk3</th>
-                            <th scope="col">Bulk3 price</th>
-                            <th scope="col">Handle</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                            $totalCasePrice = 0;
-                            $totalUnitPrice = 0;
-                            $totalbulk1Price = 0;
-                            $totalbulk2Price = 0;
-                            $totalbulk3Price = 0;
-                            $total_amount = 0;
-                        ?>
-                        @if ($cart->isEmpty())
-                        <tr>
-                            <td colspan="10" class="text-center">Your cart is empty</td>
-                        </tr>
-                        @else
-                        @foreach ($cart as $cart)
-                        <tr>
-                            <td>
-                                @foreach($cart->product_images as $image)
-                                <img src="{{ asset($image->large_image) }}" alt="Product Image" class="product-image">
-                                @endforeach
-                            </td>
-                            <td>{{ $cart->product_title }}</td>
-                            <td>{{ $cart->quantity }}</td>
-                            <td>{{ $cart->case }}</td>
-                            <td>{{ $cart->unit_price }}</td>
-                            <td>{{ $cart->case_price }}</td>
-                            <td>{{ $cart->bcqty1 }}</td>
-                            <td>{{ $cart->total_bulk1_price }}</td>
-                            <td>{{ $cart->bcqty2 }}</td>
-                            <td>{{ $cart->total_bulk2_price }}</td>
-                            <td>{{ $cart->bcqty3 }}</td>
-                            <td>{{ $cart->total_bulk3_price }}</td>
-
-                            <td>
-                                <a class="btn btn-danger"
-                                    onclick="return confirm('Are you sure to remove this product?')"
-                                    style="font-size:12px" href="{{ url('/remove_cart', $cart->id) }}">Remove</a>
-                            </td>
-                        </tr>
-                        <?php 
-                            $totalUnitPrice += $cart->unit_price;
-                            $totalCasePrice += $cart->case_price;
-                            $totalbulk1Price += $cart->total_bulk1_price;
-                            $totalbulk2Price += $cart->total_bulk2_price;
-                            $totalbulk3Price += $cart->total_bulk3_price;
+            <script>
+                function updateQuantity(inputId, index, type) {
+                    var inputField = document.getElementById(inputId);
+                    var currentValue = parseInt(inputField.value);
+                    if (type === 'quantity') {
+                        cart[index].quantity = currentValue;
+                    } else if (type === 'case') {
+                        cart[index].case = currentValue;
+                    }
+                    updateTotalAmount();
+                }
             
-                            $total_amount = $totalUnitPrice + $totalCasePrice + $totalbulk1Price + $totalbulk2Price + $totalbulk3Price;
-                        ?>
-                        @endforeach
-                        @endif
-                    </tbody>
-                </table>
-            </div> --}}
+                function updateTotalAmount() {
+                    var totalAmount = 0;
+                    cart.forEach(function(item) {
+                        var totalItemPrice = item.unit_price + item.case_price + item.total_bulk1_price + item.total_bulk2_price + item.total_bulk3_price;
+                        var totalPriceWithVat = totalItemPrice + ((item.vat * item.unit_price) / 100);
+                        totalAmount += totalPriceWithVat;
+                    });
+                    document.getElementById('total_amount').textContent = totalAmount.toFixed(2);
+                }
+            </script>
 
 
-
-
-            {{-- <div class="table-responsive">
-                <table class="table d-md-none" style="font-size: 12px">
-                    <tbody>
-
-                        @foreach($cartForSmartphone as $item)
-                        <tr>
-                            <td>Product Name</td>
-                            <td>{{ $item->product_title }}</td>
-                        </tr>
-                        <tr>
-                            <td>Quantity</td>
-                            <td>{{ $item->quantity }}</td>
-                        </tr>
-                        @endforeach
-
-                        <!-- Include other table rows as needed -->
-                    </tbody>
-                </table>
-            </div> --}}
-
-
-            {{-- <table class="table table-responsive d-md-none ms-5">
-                <tbody>
-
-                    <tr>
-
-                        <td>
-                            @foreach($cart->product_images as $image)
-                            <img src="{{ asset($image->large_image) }}" alt="Product Image" class="product-image">
-                            @endforeach
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Product Title</td>
-                        <td>
-                            <h4>{{ $cart->product_title}}</h4>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Quantity</td>
-                        <td>{{ $cart->quantity}}</td>
-                    </tr>
-                    <tr>
-                        <td>Case</td>
-                        <td>{{ $cart->case }}</td>
-                    </tr>
-                    <tr>
-                        <td>Quantity price</td>
-                        <td><i class="fas fa-pound-sign"></i> {{ $cart->unit_price }}</td>
-                    </tr>
-                    <tr>
-                        <td>Case price</td>
-                        <td><i class="fas fa-pound-sign"></i> {{ $cart->case_price }}</td>
-                    </tr>
-                    <tr>
-                        <td>Bulk 1</td>
-                        <td>{{ $cart->bcqty1 }}</td>
-                    </tr>
-                    <tr>
-                        <td>Bulk 1 price</td>
-                        <td><i class="fas fa-pound-sign"></i> {{ $cart->total_bulk1_price }}</td>
-                    </tr>
-                    <tr>
-                        <td>Bulk 2</td>
-                        <td>{{ $cart->bcqty2 }}</td>
-                    </tr>
-                    <tr>
-                        <td>Bulk 2 price</td>
-                        <td><i class="fas fa-pound-sign"></i> {{ $cart->total_bulk2_price }}</td>
-                    </tr>
-                    <tr>
-                        <td>Bulk 3</td>
-                        <td>{{ $cart->bcqty3 }}</td>
-                    </tr>
-                    <tr>
-                        <td>Bulk 3 price</td>
-                        <td><i class="fas fa-pound-sign"></i> {{ $cart->total_bulk3_price }}</td>
-                    </tr>
-
-                </tbody>
-            </table> --}}
 
             <div>
 
