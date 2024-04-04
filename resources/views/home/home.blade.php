@@ -17,8 +17,8 @@
         }
 
         .vesitable-item {
-            width: 350px;
-            margin-right: 5px;
+
+
             /* Adjust the margin as needed */
         }
 
