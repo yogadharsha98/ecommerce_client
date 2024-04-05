@@ -1,5 +1,4 @@
 <div class="container-fluid fixed-top">
-
     @if (session('message'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('message') }}
@@ -20,61 +19,51 @@
                     <a href="/" class="nav-item nav-link active">Home</a>
                     <a href="{{url('/products')}}" class="nav-item nav-link">Products</a>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Categories</a>
-                        <div class="dropdown-menu m-0 bg-secondary rounded-0">
-
-                            <ul class="dropdown-menu">
-
-                                @foreach($departments as $de)
-                                <li><a href="{{ url('category', $de->id) }}" class="dropdown-item">{{
-                                        $de->department_title }}</a></li>
-                                @endforeach
-                                <li><a href="{{url('/departments')}}" class="dropdown-item">All categories</a></li>
-                            </ul>
-                        </div>
+                        <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                            Categories
+                        </a>
+                        <ul class="dropdown-menu">
+                            @foreach($departments as $de)
+                            <li><a href="{{ url('category', $de->id) }}" class="dropdown-item">{{ $de->department_title
+                                    }}</a></li>
+                            @endforeach
+                            <li><a href="{{url('/departments')}}" class="dropdown-item">All categories</a></li>
+                        </ul>
                     </div>
-
                     <a href="{{url('contactus')}}" class="nav-item nav-link">Contact</a>
-
                     <a href="{{url('show_order')}}" class="nav-item nav-link">Orders</a>
-
                 </div>
                 <div class="d-flex m-3 me-0">
+                    <!-- Search button -->
                     <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
-                        data-bs-toggle="modal" data-bs-target="#searchModal"><i
-                            class="fas fa-search text-primary"></i></button>
+                        data-bs-toggle="modal" data-bs-target="#searchModal">
+                        <i class="fas fa-search text-primary"></i>
+                    </button>
+                    <!-- Shopping cart -->
                     <a href="{{url('show_cart')}}" class="position-relative me-4 my-auto">
                         <i class="fa fa-shopping-bag fa-2x"></i>
                         <span
                             class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                             style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
                     </a>
-
+                    <!-- User account or sign-in button -->
                     @auth('customer')
                     @if (session('customer'))
-
                     <a href="{{url('myaccount')}}" class="my-auto">
                         <i class="fas fa-user fa-2x"></i>
                     </a>
-                    <p class="">
-                        {{ session('customer')->name }}
-                    </p>
+                    <p class="my-auto">{{ session('customer')->name }}</p>
                     <form class="inline ms-4" method="Post" action="/logout">
                         @csrf
                         <i class="fa fa-sign-out" aria-hidden="true"></i>
-                        <button type="submit" class="btn btn-warning">
-                            Logout
-                        </button>
-
+                        <button type="submit" class="btn btn-warning">Logout</button>
                     </form>
                     @endif
                     @else
                     <a href="/login" class="my-auto">
-                        {{-- <i class="fa fa-sign-in fa-2x"></i> --}}
                         <button class="btn btn-warning">SignIn</button>
                     </a>
                     @endauth
-
                 </div>
             </div>
         </nav>

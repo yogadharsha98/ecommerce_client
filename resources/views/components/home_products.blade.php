@@ -27,28 +27,44 @@
 
                     <div class="rounded-bottom">
                         <strong>
-                            <p style="font-size: 12px;">{{$product->product_name}}</p>
-                            <p style="font-size: 25px; color:red"> <i
-                                    class="fas fa-pound-sign"></i>{{$product->unit_price}}</p>
+                            <p style="font-size: 14px;" class="text-dark">{{$product->product_name}}</p>
                         </strong>
+                        <p class="info" style="display: none; font-size:13px;">
+                            {{$product->product_description}}
+                        </p>
 
-                        <div class="">
-                            <p class=" bulk-info" style="display: none; font-size:14px;">
-                                {{$product->bcqty_1}} bulks
-                                <i class="fas fa-pound-sign"></i>
-                                {{$product->bcp_1}}
-                            </p>
-                            <p class=" bulk-info " style="display: none; font-size:14px;">
-                                {{$product->bcqty_2}} bulks
-                                <i class="fas fa-pound-sign"></i>
-                                {{$product->bcp_2}}
-                            </p>
-                            <p class=" bulk-info " style="display: none;font-size:14px;">
-                                {{$product->bcqty_3}} bulks
-                                <i class="fas fa-pound-sign"></i>
-                                {{$product->bcp_3}}
-                            </p>
+
+                        <div>
+                            <strong>
+                                <p style="font-size: 25px;"> <i class=" fas fa-pound-sign"></i>{{$product->unit_price}}
+                                </p>
+                            </strong>
+                            <div class="d-flex justify-content-center gap-1 flex-row text-center">
+                                <strong>
+                                    <p class="info py-2 px-1 rounded text-dark"
+                                        style="display: none; font-size:11px; background-color:rgb(235, 235, 235)">
+                                        {{$product->bcqty_1}} for
+                                        <i class="fas fa-pound-sign"></i>{{$product->bcp_1}}
+                                    </p>
+                                </strong>
+                                <strong>
+                                    <p class="info py-2 px-1 rounded text-dark"
+                                        style="display: none; font-size:11px; background-color:rgb(235, 235, 235)">
+                                        {{$product->bcqty_2}} for
+                                        <i class="fas fa-pound-sign"></i>{{$product->bcp_2}}
+                                    </p>
+                                </strong>
+                                <strong>
+                                    <p class="info py-2 px-1 rounded text-dark"
+                                        style="display: none; font-size:11px; background-color:rgb(235, 235, 235)">
+                                        {{$product->bcqty_3}} for
+                                        <i class="fas fa-pound-sign"></i>{{$product->bcp_3}}
+                                    </p>
+                                </strong>
+
+                            </div>
                         </div>
+
 
                     </div>
                 </div>
@@ -56,20 +72,22 @@
             @endforeach
         </div>
 
+
+
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const fruiteItems = document.querySelectorAll('.fruite-item');
         
                 fruiteItems.forEach(item => {
                     item.addEventListener('mouseenter', function () {
-                        const bulkInfo = item.querySelectorAll('.bulk-info');
+                        const bulkInfo = item.querySelectorAll('.info');
                         bulkInfo.forEach(info => {
                             info.style.display = 'block';
                         });
                     });
         
                     item.addEventListener('mouseleave', function () {
-                        const bulkInfo = item.querySelectorAll('.bulk-info');
+                        const bulkInfo = item.querySelectorAll('.info');
                         bulkInfo.forEach(info => {
                             info.style.display = 'none';
                         });

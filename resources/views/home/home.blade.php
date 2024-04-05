@@ -9,7 +9,17 @@
         .carousel-inner,
         .carousel-item {
             height: 230px;
+            object-fit: cover;
+        }
 
+        .hero-header .align-items-stretch>div {
+            height: 100%;
+            /* Make the columns stretch to match height */
+        }
+
+        .hero-header .carousel-item {
+            height: 100%;
+            /* Make the carousel items fill the available height */
         }
 
         .fruite-item:hover .bulk-info {
@@ -36,6 +46,17 @@
                 /* Three products per row */
                 max-width: 50%;
             }
+        }
+
+        .pagination-wrapper ul.pagination {
+            display: inline-flex;
+            list-style: none;
+            padding: 2px;
+        }
+
+        .pagination-wrapper ul.pagination li {
+            margin: 0 3px;
+            padding: 0;
         }
     </style>
 
@@ -82,6 +103,14 @@
             @include('components.home_products')
         </div>
     </div>
+    {{-- {{ $products->links() }} --}}
+    <div class="pagination-wrapper">
+        <div class="pagination d-flex justify-content-center mt-5">
+            {{ $products->links() }}
+        </div>
+    </div>
+
+
 
 
 
@@ -94,7 +123,21 @@
     @include('components.copyrights')
     <!-- Copyright End -->
 
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the carousel item containing the image
+            const carouselItem = document.querySelector('.carousel-item');
+    
+            // Get the image element within the carousel item
+            const image = carouselItem.querySelector('img');
+    
+            // Get the height of the image
+            const imageHeight = image.clientHeight;
+    
+            // Output the height of the image to the console
+            console.log('Height of the slider image:', imageHeight);
+        });
+    </script>
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
             class="fa fa-arrow-up"></i></a>

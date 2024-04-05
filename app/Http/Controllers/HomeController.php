@@ -27,7 +27,7 @@ class HomeController extends Controller
     {
         $data = Department::all();
         $departments = Department::all();
-        $products = Product::all();
+        $products = Product::paginate(2);
         $slider = Slider::all();
 
         $featuredProducts = Product::where('featured', true)->get();
@@ -38,7 +38,7 @@ class HomeController extends Controller
     public function show_all_products()
     {
         $departments = Department::all();
-        $products = Product::all();
+        $products = Product::paginate(2);
         // Retrieve featured products
         $featuredProducts = Product::where('featured', 1)->get();
 
@@ -66,7 +66,7 @@ class HomeController extends Controller
     public function view_products()
     {
         $departments = Department::all();
-        $products = Product::all();
+        $products = Product::paginate(2);
         // Retrieve featured products
         $featuredProducts = Product::where('featured', 1)->get();
 
@@ -79,8 +79,6 @@ class HomeController extends Controller
     {
         $departments = Department::all();
         $department = Department::find($id);
-        $products = Product::all();
-
 
         // Check if department exists
         if (!$department) {
@@ -91,7 +89,7 @@ class HomeController extends Controller
         $groups = $department->groups;
         // Retrieve featured products
         $featuredProducts = Product::where('featured', 1)->get();
-
+        $products = Product::where('department_id', $id)->paginate(1);
         // Retrieve trending products
         $trendingProducts = Product::where('trending', 1)->get();
 
@@ -104,7 +102,7 @@ class HomeController extends Controller
     public function view_group($id)
     {
         $departments = Department::all();
-        $products = Product::all();
+        $products = Product::where('group_id', $id)->paginate(2);
         $group = Group::find($id);
         $subgroups = $group->subGroups;
         $featuredProducts = Product::where('featured', 1)->get();
@@ -119,8 +117,8 @@ class HomeController extends Controller
     {
         $departments = Department::all();
         $subgroup = SubGroup::find($id);
-        $subgroupproducts = Product::where('sub_group_id', $subgroup->id)->get();
-        $products = Product::all();
+        $subgroupproducts = Product::where('sub_group_id', $subgroup->id)->paginate(1);
+        $products = Product::where('sub_group_id', $id)->get();
         $featuredProducts = Product::where('featured', 1)->get();
 
         // Retrieve trending products
@@ -131,7 +129,7 @@ class HomeController extends Controller
 
     public function product_details(Request $request, $id)
     {
-        $products = Product::all();
+        $products = Product::paginate(2);
         $departments = Department::all();
         $product_details = Product::find($id);
         $banner = Banner::all();
@@ -180,9 +178,15 @@ class HomeController extends Controller
                 // Update the existing cart item with new quantities
                 $existingCartItem->quantity = $request->quantity;
                 $existingCartItem->case = $request->case_quantity;
+
                 // Recalculate prices based on new quantities
                 $existingCartItem->unit_price = $product->discount_price != null ? $product->discount_price * $request->quantity : $product->unit_price * $request->quantity;
                 $existingCartItem->case_price = $product->case_price * $request->case_quantity;
+                $existingCartItem->bcqty1 = $request->bulk1 ? $product->bcqty_1 : 0;
+                $existingCartItem->bcqty2 = $request->bulk2 ? $product->bcqty_2 : 0;
+                $existingCartItem->bcqty3 = $request->bulk3 ? $product->bcqty_3 : 0;
+
+
                 if ($request->bulk1) {
                     $existingCartItem->bcqty1 = $product->bcqty_1;
                     $existingCartItem->total_bulk1_price = $product->bcp_1 * $product->bcqty_1;

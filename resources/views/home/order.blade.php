@@ -62,7 +62,7 @@
             @if ($order->isEmpty())
             <div class="d-flex flex-column align-items-center">
                 <p class="text-center">Your order is empty</p>
-                <a href="{{url('departments')}}" class="btn btn-primary">
+                <a href="{{url('products')}}" class="btn btn-primary">
                     Continue shopping
                 </a>
             </div>

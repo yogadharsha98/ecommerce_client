@@ -20,29 +20,55 @@
             </div>
             @endif
         </a>
-        <div class="border-top-0 rounded-bottom">
-            <p style="font-size: 14px" class="mt-2 mb-2 ms-2">{{$product->product_name}}</p>
-            <a href="{{url('product_details',$product->id)}}">
+        <div class="rounded-bottom">
+            <strong class="d-flex justify-content-center">
+                <p style="font-size: 14px;" class="text-dark">{{$product->product_name}}</p>
+            </strong>
+            <div class="d-flex justify-content-center">
+                <p class="info" style="display: none; font-size:13px;">
+                    {{$product->product_description}}
+                </p>
+            </div>
 
-                <div class="gap-2 d-flex flex-column align-items-center p-2">
-                    <button class="btn btn-outline-secondary bulk-info w-100" style="display: none; font-size:14px;">
-                        {{$product->bcqty_1}} bulks
-                        <i class="fas fa-pound-sign"></i>
-                        {{$product->bcp_1}}</button>
-                    <button class="btn btn-outline-secondary bulk-info w-100" style="display: none; font-size:14px;">
-                        {{$product->bcqty_2}} bulks
-                        <i class="fas fa-pound-sign"></i>
-                        {{$product->bcp_2}}</button>
-                    <button class="btn btn-outline-secondary bulk-info w-100" style="display: none;font-size:14px;">
-                        {{$product->bcqty_3}} bulks
-                        <i class="fas fa-pound-sign"></i>
-                        {{$product->bcp_3}}</button>
+
+            <div>
+                <strong class="d-flex justify-content-center">
+                    <p style="font-size: 18px; color:red"> <i class="fas fa-pound-sign"></i>{{$product->unit_price}}</p>
+                </strong>
+                <div class="d-flex justify-content-center gap-1 flex-row text-center">
+                    <strong>
+                        <p class="info py-2 rounded px-1 text-dark"
+                            style="display: none; font-size:11px; background-color:rgb(235, 235, 235)">
+                            {{$product->bcqty_1}} for
+                            <i class="fas fa-pound-sign"></i>{{$product->bcp_1}}
+                        </p>
+                    </strong>
+                    <strong>
+                        <p class="info py-2 rounded px-1 text-dark"
+                            style="display: none; font-size:11px; background-color:rgb(235, 235, 235)">
+                            {{$product->bcqty_2}} for
+                            <i class="fas fa-pound-sign"></i>{{$product->bcp_2}}
+                        </p>
+                    </strong>
+                    <strong>
+                        <p class="info py-2 rounded px-1 text-dark"
+                            style="display: none; font-size:11px; background-color:rgb(235, 235, 235)">
+                            {{$product->bcqty_3}} for
+                            <i class="fas fa-pound-sign"></i>{{$product->bcp_3}}
+                        </p>
+                    </strong>
+
                 </div>
-            </a>
+            </div>
+
+
         </div>
     </div>
 </div>
 @endforeach
+
+
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -50,14 +76,14 @@
 
         fruiteItems.forEach(item => {
             item.addEventListener('mouseenter', function () {
-                const bulkInfo = item.querySelectorAll('.bulk-info');
+                const bulkInfo = item.querySelectorAll('.info');
                 bulkInfo.forEach(info => {
                     info.style.display = 'block';
                 });
             });
 
             item.addEventListener('mouseleave', function () {
-                const bulkInfo = item.querySelectorAll('.bulk-info');
+                const bulkInfo = item.querySelectorAll('.info');
                 bulkInfo.forEach(info => {
                     info.style.display = 'none';
                 });

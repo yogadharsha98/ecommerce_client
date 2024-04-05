@@ -20,6 +20,17 @@
                 max-width: 33%;
             }
         }
+
+        .pagination-wrapper ul.pagination {
+            display: inline-flex;
+            list-style: none;
+            padding: 2px;
+        }
+
+        .pagination-wrapper ul.pagination li {
+            margin: 0 3px;
+            padding: 0;
+        }
     </style>
 </head>
 
@@ -65,10 +76,10 @@
                                 <label for="fruits">Default Sorting:</label>
                                 <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3"
                                     form="fruitform">
-                                    <option value="volvo">Nothing</option>
-                                    <option value="saab">Popularity</option>
-                                    <option value="opel">Organic</option>
-                                    <option value="audi">Fantastic</option>
+                                    <option value="volvo">Fast moving</option>
+                                    <option value="saab">Price ascending</option>
+                                    <option value="opel">Price descending</option>
+                                    <option value="audi">High margin</option>
                                 </select>
                             </div>
                         </div>
@@ -187,22 +198,102 @@
                                 </div>
                                 @endforeach
 
-                                <h1>All Products</h1>
-                                @include('components.products')
+                                @if ($products->isEmpty())
+                                <div class="d-flex flex-column align-items-center">
+                                    <p class="text-center">Currently we don't have products in this department. We will
+                                        update by soon.</p>
+                                    <a href="{{url('products')}}" class="btn btn-primary">
+                                        Continue shopping
+                                    </a>
+
+                                </div>
+                                @else
+                                <h1>Products</h1>
+                                @foreach ($products as $product)
+                                <div class="col-md-6 col-lg-3 col-xl-3 h-20 p-2">
+                                    <div class="rounded position-relative fruite-item border border-secondary">
+                                        <a href="{{url('product_details',$product->id)}}">
+                                            {{-- Retrieve the main product image --}}
+                                            <div class="fruite-img position-relative">
+                                                @if($product->productImages->count() > 0)
+                                                <img src="{{ asset($product->productImages->first()->large_image) }}"
+                                                    class="img-fluid w-100 rounded-top product-image"
+                                                    alt="Product Image" style="position: relative;">
+                                                <!-- Ensure the image container has relative positioning -->
+
+                                                @endif
+                                            </div>
+
+                                            {{-- Retrieve the product thumbnail --}}
+                                            @if($product->productThumbnails->count() > 0)
+                                            <div class="thumbnail">
+                                                <img src="{{ asset($product->productThumbnails->first()->thumbnail_image) }}"
+                                                    class="img-thumbnail product-thumbnail" alt="Product Thumbnail">
+                                            </div>
+                                            @endif
+                                        </a>
+                                        <div class="rounded-bottom">
+                                            <strong class="d-flex justify-content-center">
+                                                <p style="font-size: 14px;" class="tex-dark">{{$product->product_name}}
+                                                </p>
+                                            </strong>
+                                            <div class="d-flex justify-content-center">
+                                                <p class="info" style="display: none; font-size:13px;">
+                                                    {{$product->product_description}}
+                                                </p>
+                                            </div>
 
 
-                                <div class="col-12">
-                                    <div class="pagination d-flex justify-content-center mt-5">
-                                        <a href="#" class="rounded">&laquo;</a>
-                                        <a href="#" class="active rounded">1</a>
-                                        <a href="#" class="rounded">2</a>
-                                        <a href="#" class="rounded">3</a>
-                                        <a href="#" class="rounded">4</a>
-                                        <a href="#" class="rounded">5</a>
-                                        <a href="#" class="rounded">6</a>
-                                        <a href="#" class="rounded">&raquo;</a>
+                                            <div>
+                                                <strong class="d-flex justify-content-center">
+                                                    <p style="font-size: 25px; color:red"> <i
+                                                            class="fas fa-pound-sign"></i>{{$product->unit_price}}</p>
+                                                </strong>
+                                                <div class="d-flex justify-content-center gap-1 flex-row text-center">
+                                                    <strong>
+                                                        <p class="info py-2 rounded px-1"
+                                                            style="display: none; font-size:11px; background-color:rgb(235,235,235)">
+                                                            {{$product->bcqty_1}} for
+                                                            <i class="fas fa-pound-sign"></i>{{$product->bcp_1}}
+                                                        </p>
+                                                    </strong>
+                                                    <strong>
+                                                        <p class="info py-2 rounded px-1"
+                                                            style="display: none; font-size:11px; background-color:rgb(235,235,235)">
+                                                            {{$product->bcqty_2}} for
+                                                            <i class="fas fa-pound-sign"></i>{{$product->bcp_2}}
+                                                        </p>
+                                                    </strong>
+                                                    <strong>
+                                                        <p class="info py-2 rounded px-1"
+                                                            style="display: none; font-size:11px; background-color:rgb(235,235,235)">
+                                                            {{$product->bcqty_3}} for
+                                                            <i class="fas fa-pound-sign"></i>{{$product->bcp_3}}
+                                                        </p>
+                                                    </strong>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
                                     </div>
                                 </div>
+                                @endforeach
+                                @endif
+
+                                @if ($products->isNotEmpty())
+                                <div class="row mt-5">
+                                    <div class="col-12">
+                                        <div class="pagination-wrapper">
+                                            <div class="pagination d-flex justify-content-end mt-5">
+                                                {{ $products->links() }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>

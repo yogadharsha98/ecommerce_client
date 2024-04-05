@@ -41,6 +41,17 @@
             /* Match the background color */
 
         }
+
+        .pagination-wrapper ul.pagination {
+            display: inline-flex;
+            list-style: none;
+            padding: 2px;
+        }
+
+        .pagination-wrapper ul.pagination li {
+            margin: 0 3px;
+            padding: 0;
+        }
     </style>
 
 </head>
@@ -97,38 +108,44 @@
                             <form id="addToCartForm" action="{{ url('add_cart', $product_details->id) }}" method="POST">
                                 @csrf
                                 <h4 class="fw-bold mb-3">{{ $product_details->product_name }}</h4>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-2">
+                                        <!-- Adjust the column width for smartphone view -->
+                                        <h5>Unit: </h5>
+                                        <h5>Case: </h5>
+                                    </div>
+                                    <div class="col-md-6 col-lg-4">
+                                        <!-- Adjust the column width for smartphone view -->
+                                        <h5 class="fw-bold" style="color: red">
+                                            <i class="fas fa-pound-sign"></i>
+                                            {{ $product_details->unit_price }}
+                                        </h5>
+                                        <h5 style="color: red">
+                                            <i class="fas fa-pound-sign"></i>
+                                            {{ $product_details->case_price }}
+                                        </h5>
+                                    </div>
+                                    <div class="col-md-6 col-lg-1">
+                                        <!-- For update units -->
 
-                                <div class="d-flex gap-4 align-items-center">
-                                    <h5>Unit: </h5>
-                                    <h5 class="fw-bold" style="color: red">
-                                        <i class="fas fa-pound-sign"></i>
-                                        {{ $product_details->unit_price }}
-                                    </h5>
-                                    <div class="d-flex align-items-center gap-2 ms-2" style="width: 120px;">
-                                        <i class="bi bi-dash-circle align-middle" style="font-size: 25px"></i>
-                                        <input type="text" id="unitQuantity" name="quantity"
-                                            class="form-control form-control-sm text-center border-0 align-middle"
-                                            value="0" style="font-size: 15px">
-                                        <i class="bi bi-plus-circle align-middle" style="font-size: 25px"></i>
-
+                                        <div class="d-flex align-items-center" style="width: 100px;">
+                                            <i class="bi bi-dash-circle align-middle" style="font-size: 22px"></i>
+                                            <input type="text" id="unitQuantity" name="quantity"
+                                                class="form-control form-control-sm text-center border-0 align-middle"
+                                                value="0" style="font-size: 15px">
+                                            <i class="bi bi-plus-circle align-middle" style="font-size: 22px"></i>
+                                        </div>
+                                        <!-- For update cases -->
+                                        <div class="d-flex gap-2" style="width: 100px;">
+                                            <i class="bi bi-dash-circle" style="font-size: 22px"></i>
+                                            <input type="text" id="caseQuantity" name="case_quantity"
+                                                class="form-control form-control-sm text-center border-0" value="0"
+                                                style="font-size: 15px">
+                                            <i class="bi bi-plus-circle " style="font-size: 22px"></i>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="d-flex align-items-center mb-3 gap-3 mt-3">
-                                    <h5>Case: </h5>
-                                    <h5 style="color: red">
-                                        <i class="fas fa-pound-sign"></i>
-                                        {{ $product_details->case_price }}
-                                    </h5>
-                                    <div class="d-flex gap-2 ms-1" style="width: 120px;">
-                                        <i class="bi bi-dash-circle" style="font-size: 25px"></i>
-                                        <input type="text" id="caseQuantity" name="case_quantity"
-                                            class="form-control form-control-sm text-center border-0" value="0"
-                                            style="font-size: 15px">
-                                        <i class="bi bi-plus-circle " style="font-size: 25px"></i>
-
-                                    </div>
-                                </div>
 
                                 <br />
 
@@ -167,11 +184,6 @@
                                 });
                             </script>
 
-
-
-
-
-
                             <script>
                                 document.getElementById('addToCartForm').addEventListener('submit', function(event) {
                                     var quantity = document.getElementsByName('quantity')[0].value;
@@ -186,6 +198,7 @@
                                     }
                                 });
                             </script>
+
                         </div>
 
                         <div class="col-lg-12">
@@ -355,7 +368,7 @@
                             </div>
                         </div>
 
-                        <form action="#">
+                        {{-- <form action="#">
                             <h4 class="mb-5 fw-bold">Leave a Reply</h4>
                             <div class="row g-4">
                                 <div class="col-lg-6">
@@ -392,7 +405,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </form> --}}
 
                     </div>
                 </div>
@@ -468,10 +481,21 @@
                 </div>
             </div>
             <h1 class="fw-bold mb-5">All products</h1>
+
             <div class="row g-1">
 
                 @include('components.products')
 
+
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="pagination-wrapper">
+                        <div class="pagination d-flex justify-content-end mt-5">
+                            {{ $products->links() }}
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>

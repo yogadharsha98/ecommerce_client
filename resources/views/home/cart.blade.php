@@ -127,7 +127,7 @@
             @if ($cart->isEmpty())
             <div class="d-flex flex-column align-items-center">
                 <p class="text-center">Your cart is empty</p>
-                <a href="{{url('departments')}}" class="btn btn-primary">
+                <a href="{{url('products')}}" class="btn btn-primary">
                     Continue shopping
                 </a>
 
@@ -162,6 +162,7 @@
 
                         <div class="col-lg-3 d-flex flex-column">
                             <h5>{{$cartItem->product_title}}</h5>
+                            <p></p>
                             @if(isset($cartItem->case) && $cartItem->case > 0)
                             Case: {{$cartItem->case}}
                             <br />
@@ -179,24 +180,40 @@
                             @if(isset($cartItem->bcqty3) && $cartItem->bcqty3 > 0)
                             Bulk3:{{$cartItem->bcqty3}}
                             @endif
+
+                            {{-- <div class="d-flex gap-2">
+                                <input type="checkbox" class="btn-check" id="bulk1" name="bulk1" autocomplete="off" {{
+                                    $cartItem->bcqty1 ? 'checked' : '' }}>
+                                <label class="btn btn-outline-secondary" for="bulk1">Bulk 1</label><br>
+
+                                <input type="checkbox" class="btn-check" id="bulk2" name="bulk2" autocomplete="off" {{
+                                    $cartItem->bcqty2 ? 'checked' : '' }}>
+                                <label class="btn btn-outline-secondary" for="bulk2">Bulk 2</label><br>
+
+                                <input type="checkbox" class="btn-check" id="bulk3" name="bulk3" autocomplete="off" {{
+                                    $cartItem->bcqty3 ? 'checked' : '' }}>
+                                <label class="btn btn-outline-secondary" for="bulk3">Bulk 3</label><br>
+                            </div> --}}
                         </div>
 
 
-                        <div class="col-lg-2 ">
-                            <form action="{{ url('add_cart', $cartItem->product_id) }}" method="POST">
+                        <div class="col-lg-3">
+                            {{-- <form action="{{ url('add_cart', $cartItem->product_id) }}" method="POST">
                                 @csrf
                                 <label for="case_quantity">Case:</label>
-                                <input class="border border-secondary mb-2 " type="number" id="case_quantity"
-                                    name="case_quantity" value="{{$cartItem->case}}">
+                                <input class="border border-secondary mb-2" type="number" id="case_quantity"
+                                    name="case_quantity" value="{{ $cartItem->case }}">
                                 <br>
-                                <label for="quantity">Quantity:</label>
-                                <input class="border border-secondary  mt-2" type="number" id="quantity" name="quantity"
-                                    value="{{$cartItem->quantity}}">
+                                <label for="quantity">Unit:</label>
+                                <input class="border border-secondary mt-2 mb-2" type="number" id="quantity"
+                                    name="quantity" value="{{ $cartItem->quantity }}">
                                 <br>
+
                                 <!-- Add hidden inputs for bulk quantities if needed -->
                                 <button type="submit" class="btn btn-secondary mt-2">Update</button>
-                            </form>
+                            </form> --}}
                         </div>
+
 
                         <div class="col-lg-1 ">
                             <p>VAT: {{$cartItem->vat}}%</p>
@@ -209,7 +226,7 @@
                             <p style="color:red"><i class="fas fa-pound-sign "></i>{{$totalPriceWithVat}} (inc vat)</p>
                         </div>
 
-                        <div class="col-lg-2 d-flex align-items-center mb-2">
+                        <div class="col-lg-1 d-flex align-items-center mb-2">
                             <a class="btn btn-danger" onclick="return confirm('Are you sure to remove this product?')"
                                 style="font-size:15px" href="{{ url('/remove_cart', $cartItem->id) }}">Remove</a>
                         </div>

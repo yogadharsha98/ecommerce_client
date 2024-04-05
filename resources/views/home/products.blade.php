@@ -20,6 +20,17 @@
                 max-width: 33%;
             }
         }
+
+        .pagination-wrapper ul.pagination {
+            display: inline-flex;
+            list-style: none;
+            padding: 2px;
+        }
+
+        .pagination-wrapper ul.pagination li {
+            margin: 0 3px;
+            padding: 0;
+        }
     </style>
 </head>
 
@@ -66,109 +77,136 @@
                                 <label for="fruits">Default Sorting:</label>
                                 <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3"
                                     form="fruitform">
-                                    <option value="volvo">Nothing</option>
-                                    <option value="saab">Popularity</option>
-                                    <option value="opel">Organic</option>
-                                    <option value="audi">Fantastic</option>
+                                    <option value="volvo">Fast moving</option>
+                                    <option value="saab">Price ascending</option>
+                                    <option value="opel">Price descending</option>
+                                    <option value="audi">High margin</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="row g-4">
-                        <div class="col-lg-3">
+                        <div class="col-lg-12">
                             <div class="row g-4">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <h4>Categories</h4>
-                                        <ul class="list-unstyled fruite-categorie">
-                                            @foreach ($departments as $department)
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a
-                                                        href="{{url('category',$department->id)}}">{{$department->department_title}}</a>
+                                @foreach ($departments as $department)
 
-                                                </div>
-                                            </li>
-                                            @endforeach
-
-
-
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-12">
-                                    <h4 class="mb-3">Featured products</h4>
-                                    @foreach($featuredProducts as $pro)
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rounded me-4 mb-3" style="width: 100px; height: 100px;">
-                                            <a href="{{url('product_details',$pro->id)}}">
-                                                @if($pro->productImages->count() > 0)
-
-                                                <img src="{{ asset($pro->productImages->first()->large_image) }}"
-                                                    class="img-fluid rounded" alt="Product Image">
-                                                <!-- Ensure the image container has relative positioning -->
-
-                                                @endif
-
-                                                {{-- Retrieve the product thumbnail --}}
-                                                @if($pro->productThumbnails->count() > 0)
-                                                <div class="thumbnail">
-                                                    <img src="{{ asset($pro->productThumbnails->first()->thumbnail_image) }}"
-                                                        class="img-thumbnail product-thumbnail" alt="Product Thumbnail">
-                                                </div>
-                                                @endif
+                                <div class="col-md-6 col-lg-3 col-xl-2 h-25">
+                                    <div class="rounded position-relative fruite-item border border-secondary">
+                                        <div class="fruite-img" style="height: 130px;">
+                                            <!-- Adjust the height as needed -->
+                                            <a href="{{url('category',$department->id)}}">
+                                                <img src="{{ $department->image }}"
+                                                    class="img-fluid w-100 h-100 object-fit-cover rounded-top" alt="">
                                             </a>
-
                                         </div>
-                                        <div>
-                                            <h6 class="mb-2">{{$pro->product_name}}</h6>
+                                        <div class="p-2 border-top-0 rounded-bottom">
+                                            <p style="font-size: 12px">{{$department->department_title}}</p>
 
-                                            <div class="d-flex mb-2">
-                                                <h5 class="fw-bold me-2">{{$pro->unit_price}}</h5>
-                                                <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endforeach
-
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="position-relative">
-                                        <img src="img/banner-fruits.jpg" class="img-fluid w-100 rounded" alt="">
-                                        <div class="position-absolute"
-                                            style="top: 50%; right: 10px; transform: translateY(-50%);">
-                                            <h3 class="text-secondary fw-bold">Fresh <br> Fruits <br> Banner</h3>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-9">
-                            <div class="row g-4">
 
-                                <h1>All Products</h1>
-                                @include('components.products')
-
-
-
-                                <div class="col-12">
-                                    <div class="pagination d-flex justify-content-center mt-5">
-                                        <a href="#" class="rounded">&laquo;</a>
-                                        <a href="#" class="active rounded">1</a>
-                                        <a href="#" class="rounded">2</a>
-                                        <a href="#" class="rounded">3</a>
-                                        <a href="#" class="rounded">4</a>
-                                        <a href="#" class="rounded">5</a>
-                                        <a href="#" class="rounded">6</a>
-                                        <a href="#" class="rounded">&raquo;</a>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="row mt-5">
+                <div class="col lg-12">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="col-lg-12">
+                                <h4 class="mb-3">Featured products</h4>
+                                @foreach($featuredProducts as $pro)
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <div class="rounded me-4 mb-3" style="width: 100px; height: 100px;">
+                                        <a href="{{url('product_details',$pro->id)}}">
+                                            @if($pro->productImages->count() > 0)
+
+                                            <img src="{{ asset($pro->productImages->first()->large_image) }}"
+                                                class="img-fluid rounded" alt="Product Image">
+                                            <!-- Ensure the image container has relative positioning -->
+
+                                            @endif
+
+                                            {{-- Retrieve the product thumbnail --}}
+                                            @if($pro->productThumbnails->count() > 0)
+                                            <div class="thumbnail">
+                                                <img src="{{ asset($pro->productThumbnails->first()->thumbnail_image) }}"
+                                                    class="img-thumbnail product-thumbnail" alt="Product Thumbnail">
+                                            </div>
+                                            @endif
+                                        </a>
+
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-2">{{$pro->product_name}}</h6>
+
+                                        <div class="d-flex mb-2">
+                                            <h5 class="fw-bold me-2"><i
+                                                    class="fas fa-pound-sign"></i>{{$pro->unit_price}}
+                                            </h5>
+                                            <h5 class="text-danger text-decoration-line-through"><i
+                                                    class="fas fa-pound-sign"></i>
+                                                4.11</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="position-relative">
+                                    <img src="img/banner-fruits.jpg" class="img-fluid w-100 rounded" alt="">
+                                    <div class="position-absolute"
+                                        style="top: 50%; right: 10px; transform: translateY(-50%);">
+                                        <h3 class="text-secondary fw-bold">Fresh <br> Fruits <br> Banner</h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="row mt-3">
+
+                                @include('components.products')
+                            </div>
+                            <div class="row mt-5">
+                                <div class="col-12">
+                                    <div class="pagination-wrapper">
+                                        <div class="pagination d-flex justify-content-end mt-5">
+                                            {{ $products->links() }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </div>
     </div>
     <!-- Fruits Shop End-->

@@ -20,6 +20,17 @@
                 max-width: 33%;
             }
         }
+
+        .pagination-wrapper ul.pagination {
+            display: inline-flex;
+            list-style: none;
+            padding: 2px;
+        }
+
+        .pagination-wrapper ul.pagination li {
+            margin: 0 3px;
+            padding: 0;
+        }
     </style>
 </head>
 
@@ -66,10 +77,10 @@
                                 <label for="fruits">Default Sorting:</label>
                                 <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3"
                                     form="fruitform">
-                                    <option value="volvo">Nothing</option>
-                                    <option value="saab">Popularity</option>
-                                    <option value="opel">Organic</option>
-                                    <option value="audi">Fantastic</option>
+                                    <option value="volvo">Fast moving</option>
+                                    <option value="saab">Price ascending</option>
+                                    <option value="opel">Price descending</option>
+                                    <option value="audi">High margin</option>
                                 </select>
                             </div>
                         </div>
@@ -172,18 +183,17 @@
 
 
 
-                                <div class="col-12">
-                                    <div class="pagination d-flex justify-content-center mt-5">
-                                        <a href="#" class="rounded">&laquo;</a>
-                                        <a href="#" class="active rounded">1</a>
-                                        <a href="#" class="rounded">2</a>
-                                        <a href="#" class="rounded">3</a>
-                                        <a href="#" class="rounded">4</a>
-                                        <a href="#" class="rounded">5</a>
-                                        <a href="#" class="rounded">6</a>
-                                        <a href="#" class="rounded">&raquo;</a>
+                                <div class="row mt-5">
+                                    <div class="col-12">
+                                        <div class="pagination-wrapper">
+                                            <div class="pagination d-flex justify-content-end mt-5">
+                                                {{ $products->links() }}
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </div>
+
                             </div>
                         </div>
                     </div>

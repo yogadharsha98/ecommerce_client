@@ -20,7 +20,7 @@
                                                     style="height: 200px; object-fit: cover;">
                                             </div>
                                         </a>
-                                        <div class="p-2 border border-secondary border-top-0 rounded-bottom">
+                                        <div class="p-2 border rounded-bottom">
                                             <strong>
                                                 <p style="font-size: 12px;">{{ $data->department_title }}</p>
                                             </strong>
