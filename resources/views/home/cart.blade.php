@@ -160,10 +160,10 @@
                             @endforeach
                         </div>
 
-                        <div class="col-lg-3 d-flex flex-column">
-                            <h5>{{$cartItem->product_title}}</h5>
+                        <div class="col-lg-2 d-flex  align-items-center">
+                            <h3>{{$cartItem->product_title}}</h3>
                             <p></p>
-                            @if(isset($cartItem->case) && $cartItem->case > 0)
+                            {{-- @if(isset($cartItem->case) && $cartItem->case > 0)
                             Case: {{$cartItem->case}}
                             <br />
                             @endif
@@ -179,7 +179,7 @@
                             @endif
                             @if(isset($cartItem->bcqty3) && $cartItem->bcqty3 > 0)
                             Bulk3:{{$cartItem->bcqty3}}
-                            @endif
+                            @endif --}}
 
                             {{-- <div class="d-flex gap-2">
                                 <input type="checkbox" class="btn-check" id="bulk1" name="bulk1" autocomplete="off" {{
@@ -197,7 +197,39 @@
                         </div>
 
 
-                        <div class="col-lg-3">
+                        <div class="col-lg-4 d-flex mt-4 mb-2 align-items-center">
+                            <p>
+                                @if(isset($cartItem->case) && $cartItem->case > 0)
+                                Cases: {{$cartItem->case}}
+                                <br />
+                                <br />
+                                @endif
+
+
+                                @if(isset($cartItem->quantity) && $cartItem->quantity > 0)
+                                Units: {{ $cartItem->quantity }}
+                                <br />
+                                <br />
+                                @endif
+
+                                @if(isset($cartItem->bcqty1) && $cartItem->bcqty1 > 0)
+                                Bulk1: {{$cartItem->bcqty1}}
+                                <br />
+                                <br />
+                                @endif
+
+                                @if(isset($cartItem->bcqty2) && $cartItem->bcqty2 > 0)
+                                Bulk2: {{$cartItem->bcqty2}}
+                                <br />
+                                <br />
+                                @endif
+
+                                @if(isset($cartItem->bcqty3) && $cartItem->bcqty3 > 0)
+                                Bulk3:{{$cartItem->bcqty3}}
+                                @endif
+                            </p>
+
+
                             {{-- <form action="{{ url('add_cart', $cartItem->product_id) }}" method="POST">
                                 @csrf
                                 <label for="case_quantity">Case:</label>
@@ -215,18 +247,18 @@
                         </div>
 
 
-                        <div class="col-lg-1 ">
+                        {{-- <div class="col-lg-1 ">
                             <p>VAT: {{$cartItem->vat}}%</p>
-                        </div>
+                        </div> --}}
 
-                        <div class="col-lg-2 d-flex flex-column">
+                        {{-- <div class="col-lg-2 d-flex flex-column">
                             <p style="color:red"><i class="fas fa-pound-sign "></i>{{$totalItemPrice}} (ex vat)</p>
                             <p>RSP: <i class="fas fa-pound-sign"></i>{{$cartItem->rsp}}</p>
                             <p>POR: {{$cartItem->por}}%</p>
                             <p style="color:red"><i class="fas fa-pound-sign "></i>{{$totalPriceWithVat}} (inc vat)</p>
-                        </div>
+                        </div> --}}
 
-                        <div class="col-lg-1 d-flex align-items-center mb-2">
+                        <div class="col-lg-2 d-flex align-items-center mb-2">
                             <a class="btn btn-danger" onclick="return confirm('Are you sure to remove this product?')"
                                 style="font-size:15px" href="{{ url('/remove_cart', $cartItem->id) }}">Remove</a>
                         </div>

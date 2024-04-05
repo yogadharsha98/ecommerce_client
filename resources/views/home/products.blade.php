@@ -88,25 +88,7 @@
                     <div class="row g-4">
                         <div class="col-lg-12">
                             <div class="row g-4">
-                                @foreach ($departments as $department)
 
-                                <div class="col-md-6 col-lg-3 col-xl-2 h-25">
-                                    <div class="rounded position-relative fruite-item border border-secondary">
-                                        <div class="fruite-img" style="height: 130px;">
-                                            <!-- Adjust the height as needed -->
-                                            <a href="{{url('category',$department->id)}}">
-                                                <img src="{{ $department->image }}"
-                                                    class="img-fluid w-100 h-100 object-fit-cover rounded-top" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="p-2 border-top-0 rounded-bottom">
-                                            <p style="font-size: 12px">{{$department->department_title}}</p>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -171,13 +153,31 @@
                         <div class="col-lg-9">
                             <div class="row mt-3">
 
-                                @include('components.products')
+                                @foreach ($departments as $department)
+
+                                <div class="col-md-6 col-lg-3 col-xl-3 h-25">
+                                    <div class="rounded position-relative fruite-item border border-secondary">
+                                        <div class="fruite-img" style="height: 130px;">
+                                            <!-- Adjust the height as needed -->
+                                            <a href="{{url('category',$department->id)}}">
+                                                <img src="{{ $department->image }}"
+                                                    class="img-fluid w-100 h-100 object-fit-cover rounded-top" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="p-2 border-top-0 rounded-bottom">
+                                            <p style="font-size: 12px">{{$department->department_title}}</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @endforeach
                             </div>
                             <div class="row mt-5">
                                 <div class="col-12">
                                     <div class="pagination-wrapper">
                                         <div class="pagination d-flex justify-content-end mt-5">
-                                            {{ $products->links() }}
+                                            {{ $departments->links() }}
                                         </div>
                                     </div>
                                 </div>

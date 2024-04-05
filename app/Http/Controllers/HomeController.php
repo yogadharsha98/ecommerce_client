@@ -37,7 +37,7 @@ class HomeController extends Controller
 
     public function show_all_products()
     {
-        $departments = Department::all();
+        $departments = Department::paginate(2);
         $products = Product::paginate(2);
         // Retrieve featured products
         $featuredProducts = Product::where('featured', 1)->get();
