@@ -16,6 +16,7 @@ use App\Models\Slider;
 use App\Models\SubGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -89,7 +90,7 @@ class HomeController extends Controller
         $groups = $department->groups;
         // Retrieve featured products
         $featuredProducts = Product::where('featured', 1)->get();
-        $products = Product::where('department_id', $id)->paginate(1);
+        $products = Product::where('department_id', $id)->get();
         // Retrieve trending products
         $trendingProducts = Product::where('trending', 1)->get();
 
@@ -235,8 +236,13 @@ class HomeController extends Controller
                 }
                 $cart->save();
             }
+            $cartCount = Carts::where('user_id', $customer->id)->count();
 
-            return redirect()->back()->with('message', 'Product added to the cart');
+            // Store the updated cart count in the session
+            session(['cartCount' => $cartCount]);
+
+            // Return the response with the updated cart count
+            return redirect()->back()->with('message', 'Product added to the cart')->with('cartCount', $cartCount);
         } else {
             // User is not authenticated, redirect to login page
             return redirect('/login');

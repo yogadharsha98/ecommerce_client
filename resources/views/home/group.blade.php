@@ -289,7 +289,7 @@
                                     <div class="col-12">
                                         <div class="pagination-wrapper">
                                             <div class="pagination d-flex justify-content-end mt-5">
-                                                {{ $products->links() }}
+                                                {{-- {{ $products->links() }} --}}
                                             </div>
                                         </div>
                                     </div>

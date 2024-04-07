@@ -160,7 +160,7 @@
                             @endforeach
                         </div>
 
-                        <div class="col-lg-2 d-flex  align-items-center">
+                        <div class="col-lg-4 d-flex  align-items-center">
                             <h3>{{$cartItem->product_title}}</h3>
                             <p></p>
                             {{-- @if(isset($cartItem->case) && $cartItem->case > 0)
@@ -307,7 +307,44 @@
                 }
             </script>
 
+            <script>
+                function updateCartCount() {
+        // Fetch the cart count from the server using an AJAX request
+        fetch('{{ url('cart_count') }}')
+            .then(response => response.json())
+            .then(data => {
+                // Update the cart count in the navbar
+                const cartCountSpan = document.getElementById('cartCount');
+                if (cartCountSpan) {
+                    cartCountSpan.textContent = data.count;
+                }
+            })
+            .catch(error => console.error('Error fetching cart count:', error));
+    }
 
+    document.getElementById('addToCartForm').addEventListener('submit', function(event) {
+        // Prevent the form from submitting normally
+        event.preventDefault();
+
+        // Submit the form data asynchronously using fetch API or AJAX
+        fetch(this.action, {
+            method: this.method,
+            body: new FormData(this)
+        })
+        .then(response => {
+            if (response.ok) {
+                // Update the cart count after successful submission
+                updateCartCount();
+            }
+            return response.text();
+        })
+        .then(data => console.log(data))
+        .catch(error => console.error('Error submitting form:', error));
+    });
+
+    // Call the updateCartCount function once the page is loaded
+    window.addEventListener('load', updateCartCount);
+            </script>
 
             <div>
 

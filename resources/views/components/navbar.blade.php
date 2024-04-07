@@ -40,12 +40,31 @@
                         <i class="fas fa-search text-primary"></i>
                     </button>
                     <!-- Shopping cart -->
-                    <a href="{{url('show_cart')}}" class="position-relative me-4 my-auto">
+                    <!-- Navbar -->
+                    <a href="{{ url('show_cart') }}" class="position-relative me-4 my-auto">
                         <i class="fa fa-shopping-bag fa-2x"></i>
+
+                        @php
+                        $cartCount = session('cartCount') ?? 0;
+                        @endphp
+                        <!-- Pass the cart count to the Livewire component -->
                         <span
                             class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
-                            style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                            style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
+                            <livewire:Cart :cartCount="$cartCount" />
+                        </span>
                     </a>
+
+
+                    <script>
+                        // Get the cart count from the session
+                        let cartCount = {{ session('cartCount') ?? 0 }};
+        
+                        // Update the cart count in the navbar
+                        document.getElementById('cartCount').innerText = cartCount;
+                        
+                    </script>
+
                     <!-- User account or sign-in button -->
                     @auth('customer')
                     @if (session('customer'))

@@ -59,10 +59,9 @@
             padding: 0;
         }
     </style>
+    @livewireStyles
 
-    <style>
 
-    </style>
 
 </head>
 

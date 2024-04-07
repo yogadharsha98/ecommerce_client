@@ -164,6 +164,31 @@
 
                                 <input type="submit" value="Add to cart"
                                     class="btn border border-secondary rounded-pill mt-3 px-4 py-2 mb-4 text-primary">
+
+                                <script>
+                                    // Livewire component script
+                                        document.getElementById('addToCartForm').addEventListener('submit', function(event) {
+                                            var quantity = document.getElementsByName('quantity')[0].value;
+                                            var caseQuantity = document.getElementsByName('case_quantity')[0].value;
+                                            var bulk1Checked = document.getElementsByName('bulk1')[0].checked;
+                                            var bulk2Checked = document.getElementsByName('bulk2')[0].checked;
+                                            var bulk3Checked = document.getElementsByName('bulk3')[0].checked;
+                                
+                                            if (parseInt(quantity) === 0 && parseInt(caseQuantity) === 0 && !bulk1Checked && !bulk2Checked && !bulk3Checked) {
+                                                event.preventDefault();
+                                                alert('Please select a quantity or a case quantity, or check at least one bulk option.');
+                                            } else {
+                                                Livewire.emit('addToCart'); // Emit the addToCart event
+                                            }
+                                        });
+                                
+                                        // Listen for addToCart event from Livewire
+                                        Livewire.on('addToCart', () => {
+                                            // Update the cart count
+                                            // You can implement custom logic here if needed
+                                            Livewire.emit('updateCartCount');
+                                        });
+                                </script>
                             </form>
 
                             <script>
@@ -184,20 +209,6 @@
                                 });
                             </script>
 
-                            <script>
-                                document.getElementById('addToCartForm').addEventListener('submit', function(event) {
-                                    var quantity = document.getElementsByName('quantity')[0].value;
-                                    var caseQuantity = document.getElementsByName('case_quantity')[0].value;
-                                    var bulk1Checked = document.getElementsByName('bulk1')[0].checked;
-                                    var bulk2Checked = document.getElementsByName('bulk2')[0].checked;
-                                    var bulk3Checked = document.getElementsByName('bulk3')[0].checked;
-                            
-                                    if (parseInt(quantity) === 0 && parseInt(caseQuantity) === 0 && !bulk1Checked && !bulk2Checked && !bulk3Checked ) {
-                                        event.preventDefault();
-                                        alert('Please select a quantity or a case quantity, or check at least one bulk option.');
-                                    }
-                                });
-                            </script>
 
                         </div>
 
