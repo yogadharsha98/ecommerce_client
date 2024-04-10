@@ -8,21 +8,23 @@
                     <a href="{{url('product_details',$product->id)}}">
                         {{-- Retrieve the main product image --}}
                         <div class="fruite-img position-relative">
-                            @if($product->productImages->count() > 0)
+                            @if($product->productImages->count() > 0 && $product->productThumbnails->count() == 0)
+                            <!-- If product has images in product_images table and not in product_thumbnails table -->
                             <img src="{{ asset($product->productImages->first()->large_image) }}"
                                 class="img-fluid w-100 rounded-top product-image" alt="Product Image"
                                 style="position: relative;">
-                            <!-- Ensure the image container has relative positioning -->
+                            @elseif($product->productThumbnails->count() > 0 && $product->productImages->count() == 0)
+                            <!-- If product has images in product_thumbnails table and not in product_images table -->
+                            <img src="{{ asset($product->productThumbnails->first()->image) }}"
+                                class="img-thumbnail product-thumbnail" alt="Product Thumbnail">
+                            @elseif($product->productImages->count() > 0 && $product->productThumbnails->count() > 0)
+                            <!-- If product has images in both tables, prioritize one (e.g., product_images) -->
+                            <img src="{{ asset($product->productImages->first()->large_image) }}"
+                                class="img-fluid w-100 rounded-top product-image" alt="Product Image"
+                                style="position: relative;">
                             @endif
                         </div>
 
-                        {{-- Retrieve the product thumbnail --}}
-                        @if($product->productThumbnails->count() > 0)
-                        <div class="thumbnail">
-                            <img src="{{ asset($product->productThumbnails->first()->thumbnail_image) }}"
-                                class="img-thumbnail product-thumbnail" alt="Product Thumbnail">
-                        </div>
-                        @endif
                     </a>
 
                     <div class="rounded-bottom">

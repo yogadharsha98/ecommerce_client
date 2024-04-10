@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Carts;
 
-class Cart extends Component
+class CustomCart extends Component
 {
     public $cartCount;
 

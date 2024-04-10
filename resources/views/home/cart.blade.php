@@ -4,15 +4,90 @@
 <head>
     <base href="/public">
     @include('components.css')
+
     <style type='text/css'>
+        .carousel,
+        .carousel-inner,
+        .carousel-item {
+            height: 230px;
+            object-fit: cover;
+        }
+
+        .hero-header .align-items-stretch>div {
+            height: 100%;
+            /* Make the columns stretch to match height */
+        }
+
+        .hero-header .carousel-item {
+            height: 100%;
+            /* Make the carousel items fill the available height */
+        }
+
+        .fruite-item:hover .bulk-info {
+            display: block;
+        }
+
+        .vesitable-item {
+
+
+            /* Adjust the margin as needed */
+        }
+
         .product-image,
         .product-thumbnail {
-            width: 150px;
             height: 150px;
+            width: 200px;
             /* Adjust this value as needed */
             object-fit: cover;
         }
+
+        .newproduct-image,
+        .newproduct-thumbnail {
+            height: 160px;
+
+            object-fit: cover;
+        }
+
+
+        /* For small screens (smartphones), display 2 products per row */
+        @media (max-width: 576px) {
+            .col-md-6 {
+                flex: 0 0 50%;
+                /* Three products per row */
+                max-width: 50%;
+            }
+        }
+
+        .pagination-wrapper ul.pagination {
+            display: inline-flex;
+            list-style: none;
+            padding: 2px;
+        }
+
+        .pagination-wrapper ul.pagination li {
+            margin: 0 3px;
+            padding: 0;
+        }
+
+        #quantityInput {
+            width: 50px;
+            /* Adjust the width as needed */
+            padding: 0.375rem;
+            /* Adjust padding as needed */
+            margin: 0 10px;
+            /* Adjust margin between elements */
+        }
+
+        #decrementBtn,
+        #incrementBtn {
+            width: 50px;
+            /* Adjust the width of buttons */
+            height: 40px;
+            /* Adjust the height of buttons */
+
+        }
     </style>
+
 </head>
 
 <body>
@@ -27,103 +102,70 @@
     <!-- Modal Search End -->
 
 
-    <!-- Single Page Header start -->
-    <div class="container-fluid page-header py-5" style="background-image: url('img/hero-img-1.png');">
-        <h1 class="text-center text-white display-6">Cart</h1>
-
-    </div>
-    <!-- Single Page Header End -->
+    @include('components.hero')
 
 
     <!-- Cart Page Start -->
     <div class="container-fluid">
-        <div class="container py-5">
+        <div class="container-fluid py-2">
+            <div class="row g-4">
+                <div class="col-lg-12">
+                    <div class="row g-4">
 
-            {{-- @if ($cart->isEmpty())
-            <div class="d-flex flex-column align-items-center">
-                <p class="text-center">Your cart is empty</p>
-                <a href="{{url('departments')}}" class="btn btn-primary">
-                    Continue shopping
-                </a>
+                        <div class="col-xl-3">
+                            <div class="input-group w-100 mx-auto d-flex">
+                                <input type="search" class="form-control p-3" placeholder="keywords"
+                                    aria-describedby="search-icon-1">
+                                <span id="search-icon-1" class="input-group-text p-3"><i
+                                        class="fa fa-search"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
+                                <label for="fruits">Group by:</label>
+                                <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3"
+                                    form="fruitform">
+                                    <option value="volvo">Fast moving</option>
+                                    <option value="saab">Price ascending</option>
+                                    <option value="opel">Price descending</option>
+                                    <option value="audi">High margin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
+                                <label for="fruits">Sort by: </label>
+                                <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3"
+                                    form="fruitform">
+                                    <option value="volvo">Fast moving</option>
+                                    <option value="saab">Price ascending</option>
+                                    <option value="opel">Price descending</option>
+                                    <option value="audi">High margin</option>
+                                </select>
+                            </div>
 
+
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
+                                <label for="fruits"><i class="bi bi-printer"></i> Print Product List</lable>
+                            </div>
+                        </div>
+                        <div class="col-xl-1">
+                            <div class="d-flex justify-content-end gap-4 mb-4">
+                                <button class="btn btn-secondary border-secondary" id="gridViewBtn"><i
+                                        class="bi bi-grid-fill"></i></button>
+                                <button class="btn btn-secondary border-secondary" id="listViewBtn"><i
+                                        class="bi bi-list"></i></button>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
 
-            @else
-            {{-- <table class="table d-md-table" style="font-size: 14px">
-                <thead>
-                    <tr>
-                        <th scope="col" class="col-sm-5">Product</th>
-                        <th scope="col" class="col-sm-1">Bulks</th>
-                        <th scope="col" class="col-sm-1">Quantity</th>
-                        <th scope="col" class="col-sm-1">Vat</th>
-                        <th scope="col" class="col-sm-1">Total</th>
 
-                        <th scope="col">Handle</th>
-                    </tr>
-                </thead>
-                <tbody> --}}
-                    {{--
-                    <?php 
-                        $totalCasePrice = 0
-                        $totalUnitPrice = 0
-                        $totalbulk1Price = 0
-                        $totalbulk2Price = 0
-                        $totalbulk3Price = 0
-                        $total_amount = 0
-                    ?>
-                    @foreach ($cart as $cartItem)
-                    <?php 
-                            $totalUnitPrice += $cartItem->unit_price;
-                            $totalCasePrice += $cartItem->case_price;
-                            $totalbulk1Price += $cartItem->total_bulk1_price;
-                            $totalbulk2Price += $cartItem->total_bulk2_price;
-                            $totalbulk3Price += $cartItem->total_bulk3_price;
-                
-                            $total_amount = $totalUnitPrice + $totalCasePrice + $totalbulk1Price + $totalbulk2Price + $totalbulk3Price;
-                        ?> --}}
-                    {{-- <tr>
-                        <td>
-                            @foreach($cartItem->product_images as $image)
-                            <img src="{{ asset($image->large_image) }}" alt="Product Image" class="product-image">
-                            @endforeach
-                        </td>
-                        <td>
-                            @if(isset($cartItem->bcqty1) && $cartItem->bcqty1 > 0)
-                            Bulk1: {{$cartItem->bcqty1}}
-                            <br />
-                            @endif
-                            @if(isset($cartItem->bcqty2) && $cartItem->bcqty2 > 0)
-                            Bulk2: {{$cartItem->bcqty2}}
-                            <br />
-                            @endif
-                            @if(isset($cartItem->bcqty3) && $cartItem->bcqty3 > 0)
-                            Bulk3:{{$cartItem->bcqty3}}
-                            @endif
-                        </td>
-                        <td>
-                            <!-- Quantity and bulk display -->
-                            @if(isset($cartItem->quantity) && $cartItem->quantity > 0)
-                            Quantity: {{$cartItem->quantity}}
-                            <br />
-                            @endif
-                            @if(isset($cartItem->case) && $cartItem->case > 0)
-                            Case: {{$cartItem->case}}
-                            <br />
-                            @endif
-                        </td>
-                        <td>5%</td>
-                        <td>{{$total_amount}}</td>
-                        {{-- <td style="color: rgb(5, 206, 5)">{{$order->payment_status}}</td> --}}
-                        {{-- <td>
-                            <a class="btn btn-danger" onclick="return confirm('Are you sure to remove this product?')"
-                                style="font-size:15px" href="{{ url('/remove_cart', $cartItem->id) }}">Remove</a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-            @endif --}}
             @if ($cart->isEmpty())
             <div class="d-flex flex-column align-items-center">
                 <p class="text-center">Your cart is empty</p>
@@ -135,7 +177,7 @@
 
             @else
 
-            <div class="row">
+            <div class="row listview" id="listview">
                 <div class="col-lg-12">
                     <?php 
                         $total_amount = 0;
@@ -152,116 +194,132 @@
                         // Add total item price with VAT to the total amount
                         $total_amount += $totalPriceWithVat;
                     ?>
-                    <div class="row g-1 mb-5 mt-2 border-bottom border-top">
+                    <div class="row g-2 mb-5 mt-2 border-bottom border-top">
 
-                        <div class="col-lg-2">
-                            @foreach($cartItem->product_images as $image)
-                            <img src="{{ asset($image->large_image) }}" alt="Product Image" class="product-image">
-                            @endforeach
+                        <div class="col-lg-2 d-flex justify-content-center">
+                            @if ($cartItem->productImages->count() > 0)
+                            <!-- If product has images in product_images table -->
+                            <img src="{{ asset($cartItem->productImages->first()->large_image) }}"
+                                class="img-fluid   product-image" alt="Product Image" style="position: relative;">
+                            @elseif ($cartItem->productThumbnails->count() > 0)
+                            <!-- If product has images in product_thumbnails table -->
+                            <img src="{{ asset($cartItem->productThumbnails->first()->image) }}"
+                                class="img-fluid   product-thumbnail" alt="Product Thumbnail"
+                                style="position: relative;">
+                            @endif
                         </div>
 
-                        <div class="col-lg-4 d-flex  align-items-center">
-                            <h3>{{$cartItem->product_title}}</h3>
-                            <p></p>
-                            {{-- @if(isset($cartItem->case) && $cartItem->case > 0)
-                            Case: {{$cartItem->case}}
-                            <br />
-                            @endif
-                            <div class="trapezoid-right">
-                                @if(isset($cartItem->bcqty1) && $cartItem->bcqty1 > 0)
-                                Bulk1: {{$cartItem->bcqty1}}
-                                <br />
-                                @endif
+                        <div class="col-lg-2 d-flex justify-content-center align-items-center">
+                            Pack size: {{$cartItem->product->packsize}}
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="d-flex align-items-start flex-column ">
+                                <h5>{{$cartItem->product->product_name}}</h5>
+                                <p>{{$cartItem->product->product_description}}</p>
                             </div>
-                            @if(isset($cartItem->bcqty2) && $cartItem->bcqty2 > 0)
-                            Bulk2: {{$cartItem->bcqty2}}
+
+
+                            <div class="d-flex justify-content-even gap-4">
+                                <p>RSP: {{$cartItem->product->rsp}}</p>
+                                <p class="info py-2 rounded px-1 text-dark"
+                                    style="font-size:11px; background-color:rgb(235, 235, 235)">Buy
+                                    {{$cartItem->product->bcqty_1}} for {{$cartItem->product->bcp_1}}</p>
+                                <p class="info py-2 rounded px-1 text-dark"
+                                    style=" font-size:11px; background-color:rgb(235, 235, 235)">Buy
+                                    {{$cartItem->product->bcqty_2}} for {{$cartItem->product->bcp_2}}</p>
+                                <p class="info py-2 rounded px-1 text-dark"
+                                    style="font-size:11px; background-color:rgb(235, 235, 235)">Buy
+                                    {{$cartItem->product->bcqty_3}} for {{$cartItem->product->bcp_3}}</p>
+                            </div>
+
+                        </div>
+
+                        {{-- @if(isset($cartItem->case) && $cartItem->case > 0)
+                        Case: {{$cartItem->case}}
+                        <br />
+                        @endif
+                        <div class="trapezoid-right">
+                            @if(isset($cartItem->bcqty1) && $cartItem->bcqty1 > 0)
+                            Bulk1: {{$cartItem->bcqty1}}
                             <br />
                             @endif
-                            @if(isset($cartItem->bcqty3) && $cartItem->bcqty3 > 0)
-                            Bulk3:{{$cartItem->bcqty3}}
-                            @endif --}}
+                        </div>
+                        @if(isset($cartItem->bcqty2) && $cartItem->bcqty2 > 0)
+                        Bulk2: {{$cartItem->bcqty2}}
+                        <br />
+                        @endif
+                        @if(isset($cartItem->bcqty3) && $cartItem->bcqty3 > 0)
+                        Bulk3:{{$cartItem->bcqty3}}
+                        @endif --}}
 
-                            {{-- <div class="d-flex gap-2">
-                                <input type="checkbox" class="btn-check" id="bulk1" name="bulk1" autocomplete="off" {{
-                                    $cartItem->bcqty1 ? 'checked' : '' }}>
-                                <label class="btn btn-outline-secondary" for="bulk1">Bulk 1</label><br>
+                        {{-- <div class="d-flex gap-2">
+                            <input type="checkbox" class="btn-check" id="bulk1" name="bulk1" autocomplete="off" {{
+                                $cartItem->bcqty1 ? 'checked' : '' }}>
+                            <label class="btn btn-outline-secondary" for="bulk1">Bulk 1</label><br>
 
-                                <input type="checkbox" class="btn-check" id="bulk2" name="bulk2" autocomplete="off" {{
-                                    $cartItem->bcqty2 ? 'checked' : '' }}>
-                                <label class="btn btn-outline-secondary" for="bulk2">Bulk 2</label><br>
+                            <input type="checkbox" class="btn-check" id="bulk2" name="bulk2" autocomplete="off" {{
+                                $cartItem->bcqty2 ? 'checked' : '' }}>
+                            <label class="btn btn-outline-secondary" for="bulk2">Bulk 2</label><br>
 
-                                <input type="checkbox" class="btn-check" id="bulk3" name="bulk3" autocomplete="off" {{
-                                    $cartItem->bcqty3 ? 'checked' : '' }}>
-                                <label class="btn btn-outline-secondary" for="bulk3">Bulk 3</label><br>
-                            </div> --}}
+                            <input type="checkbox" class="btn-check" id="bulk3" name="bulk3" autocomplete="off" {{
+                                $cartItem->bcqty3 ? 'checked' : '' }}>
+                            <label class="btn btn-outline-secondary" for="bulk3">Bulk 3</label><br>
+                        </div> --}}
+
+                        <div class="col-lg-4 d-flex flex-row justify-content-center">
+                            <div class="col-lg-3">
+                                <div style="color: red;"><i class="fas fa-pound-sign"></i>{{$totalItemPrice}} (ex vat)
+                                </div>
+                                <div style="margin-top: 50px;">Margin %</div>
+                            </div>
+                            <div class="col-lg-1 d-flex ">
+                                <div class="d-flex flex-column align-items-center" style="width: 80px">
+                                    <div class="d-flex flex-column align-items-center gap-2">
+                                        <button class="btn  incrementBtn" type="button" style="width: 60px"><i
+                                                class="bi bi-chevron-compact-up"></i></button>
+                                        <input class="form-control quantityInput" style="width: 80px; font-size:12px;"
+                                            value="{{ $cartItem->quantity ?? 0 }}" min="0">
+                                        <button class="btn  decrementBtn" type="button" style="width: 60px"><i
+                                                class="bi bi-chevron-compact-down"></i></button>
+
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
+                        {{-- <form action="{{ url(' add_cart', $cartItem->product_id) }}" method="POST">
+                            @csrf
+                            <label for="case_quantity">Case:</label>
+                            <input class="border border-secondary mb-2" type="number" id="case_quantity"
+                                name="case_quantity" value="{{ $cartItem->case }}">
+                            <br>
+                            <label for="quantity">Unit:</label>
+                            <input class="border border-secondary mt-2 mb-2" type="number" id="quantity" name="quantity"
+                                value="{{ $cartItem->quantity }}">
+                            <br>
 
-                        <div class="col-lg-4 d-flex mt-4 mb-2 align-items-center">
-                            <p>
-                                @if(isset($cartItem->case) && $cartItem->case > 0)
-                                Cases: {{$cartItem->case}}
-                                <br />
-                                <br />
-                                @endif
-
-
-                                @if(isset($cartItem->quantity) && $cartItem->quantity > 0)
-                                Units: {{ $cartItem->quantity }}
-                                <br />
-                                <br />
-                                @endif
-
-                                @if(isset($cartItem->bcqty1) && $cartItem->bcqty1 > 0)
-                                Bulk1: {{$cartItem->bcqty1}}
-                                <br />
-                                <br />
-                                @endif
-
-                                @if(isset($cartItem->bcqty2) && $cartItem->bcqty2 > 0)
-                                Bulk2: {{$cartItem->bcqty2}}
-                                <br />
-                                <br />
-                                @endif
-
-                                @if(isset($cartItem->bcqty3) && $cartItem->bcqty3 > 0)
-                                Bulk3:{{$cartItem->bcqty3}}
-                                @endif
-                            </p>
-
-
-                            {{-- <form action="{{ url('add_cart', $cartItem->product_id) }}" method="POST">
-                                @csrf
-                                <label for="case_quantity">Case:</label>
-                                <input class="border border-secondary mb-2" type="number" id="case_quantity"
-                                    name="case_quantity" value="{{ $cartItem->case }}">
-                                <br>
-                                <label for="quantity">Unit:</label>
-                                <input class="border border-secondary mt-2 mb-2" type="number" id="quantity"
-                                    name="quantity" value="{{ $cartItem->quantity }}">
-                                <br>
-
-                                <!-- Add hidden inputs for bulk quantities if needed -->
-                                <button type="submit" class="btn btn-secondary mt-2">Update</button>
-                            </form> --}}
-                        </div>
-
+                            <!-- Add hidden inputs for bulk quantities if needed -->
+                            <button type="submit" class="btn btn-secondary mt-2">Update</button>
+                        </form> --}}
 
                         {{-- <div class="col-lg-1 ">
                             <p>VAT: {{$cartItem->vat}}%</p>
                         </div> --}}
 
                         {{-- <div class="col-lg-2 d-flex flex-column">
-                            <p style="color:red"><i class="fas fa-pound-sign "></i>{{$totalItemPrice}} (ex vat)</p>
+                            <p style="color:red"><i class="fas fa-pound-sign "></i>{{$totalItemPrice}}
+                                (ex vat)</p>
                             <p>RSP: <i class="fas fa-pound-sign"></i>{{$cartItem->rsp}}</p>
                             <p>POR: {{$cartItem->por}}%</p>
                             <p style="color:red"><i class="fas fa-pound-sign "></i>{{$totalPriceWithVat}} (inc vat)</p>
                         </div> --}}
 
-                        <div class="col-lg-2 d-flex align-items-center mb-2">
+                        {{-- <div class="col-lg-2 d-flex align-items-center mb-2">
                             <a class="btn btn-danger" onclick="return confirm('Are you sure to remove this product?')"
                                 style="font-size:15px" href="{{ url('/remove_cart', $cartItem->id) }}">Remove</a>
-                        </div>
+                        </div> --}}
 
                     </div>
                     @endforeach
@@ -282,7 +340,152 @@
 
             </div>
 
+
+            <div class="row gridview d-none" id="gridview">
+
+                <div class="row gap-4">
+                    <dic class="col-lg-12">
+                        <div class="row gap-2">
+                            <?php 
+                            $total_amount = 0;
+                        ?>
+                            @foreach ($cart as $cartItem)
+
+                            <?php 
+                            // Calculate total item price for the current product
+                            $totalItemPrice = $cartItem->unit_price + $cartItem->case_price + $cartItem->total_bulk1_price + $cartItem->total_bulk2_price + $cartItem->total_bulk3_price;
+                    
+                            // Calculate total item price with VAT
+                            $totalPriceWithVat = $totalItemPrice + (($cartItem->vat * $cartItem->unit_price) / 100);
+                    
+                            // Add total item price with VAT to the total amount
+                            $total_amount += $totalPriceWithVat;
+                        ?>
+                            <div class="col-lg-2 ">
+                                <div class="card h-100">
+                                    <div class="card-body d-flex flex-column gap-2"
+                                        style="background-color: rgb(244, 241, 241)">
+                                        <div class="d-flex justify-content-center">
+                                            @if ($cartItem->productImages->count() > 0)
+                                            <!-- If product has images in product_images table -->
+                                            <img src="{{ asset($cartItem->productImages->first()->large_image) }}"
+                                                class="img-fluid   product-image" alt="Product Image"
+                                                style="position: relative;">
+                                            @elseif ($cartItem->productThumbnails->count() > 0)
+                                            <!-- If product has images in product_thumbnails table -->
+                                            <img src="{{ asset($cartItem->productThumbnails->first()->image) }}"
+                                                class="img-fluid   product-thumbnail" alt="Product Thumbnail"
+                                                style="position: relative;">
+                                            @endif
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="d-flex justify-content-center">
+                                                <strong>
+                                                    <p>{{$cartItem->product->product_name}}</p>
+                                                </strong>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="d-flex justify-content-center">
+                                                <p style="font-size: 14px">{{$cartItem->product->product_description}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="d-flex justify-content-center">
+                                                <p>Pack size: {{$cartItem->product->packsize}}</p>
+                                            </div>
+
+                                        </div>
+                                        <div class="row gap-5 d-flex justify-content-center">
+                                            <div class="col-lg-1 d-flex justify-content-center">
+                                                <p style="font-size: 12px">RSP: </p>
+                                            </div>
+                                            <div class="col-lg-1 d-flex justify-content-center">
+                                                <p style="font-size: 13px">{{$cartItem->product->rsp}}%</p>
+                                            </div>
+
+                                        </div>
+                                        <div class="mt-auto">
+                                            <div class="row ">
+                                                <div class="d-flex justify-content-center" style="color: red;">
+                                                    <p><i class="fas fa-pound-sign"></i>{{$totalItemPrice}} (ex vat)</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-auto">
+                                            <div class="row ">
+                                                <div class="d-flex justify-content-center gap-2">
+                                                    <button class="btn btn-outline-secondary decrementBtn"
+                                                        type="button"><i class="bi bi-dash"></i></button>
+                                                    <input class="form-control quantityInput"
+                                                        value="{{ $cartItem->quantity ?? 0 }}" min="0"
+                                                        style="width: 70px;font-size:12px;">
+                                                    <button class="btn btn-outline-secondary incrementBtn"
+                                                        type="button"><i class="bi bi-plus"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            @endforeach
+
+                        </div>
+                    </dic>
+                </div>
+
+
+            </div>
+
             @endif
+
+
+            <script>
+                // Wait for the DOM to be fully loaded
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Get references to the buttons and views
+                    const gridViewBtn = document.getElementById('gridViewBtn');
+                    const listViewBtn = document.getElementById('listViewBtn');
+                    const gridView = document.getElementById('gridview');
+                    const listView = document.getElementById('listview');
+            
+                    // Add click event listeners to the buttons
+                    gridViewBtn.addEventListener('click', function () {
+                        // Show grid view and hide list view
+                        gridView.classList.remove('d-none');
+                        listView.classList.add('d-none');
+                    });
+            
+                    listViewBtn.addEventListener('click', function () {
+                        // Show list view and hide grid view
+                        gridView.classList.add('d-none');
+                        listView.classList.remove('d-none');
+                    });
+                });
+            </script>
+
+
+            <script>
+                document.querySelectorAll('.incrementBtn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const input = button.parentNode.querySelector('.quantityInput');
+                        input.stepUp();
+                    });
+                });
+
+                document.querySelectorAll('.decrementBtn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const input = button.parentNode.querySelector('.quantityInput');
+                        input.stepDown();
+                    });
+                });
+            </script>
+
 
             <script>
                 function updateQuantity(inputId, index, type) {
@@ -309,41 +512,43 @@
 
             <script>
                 function updateCartCount() {
-        // Fetch the cart count from the server using an AJAX request
-        fetch('{{ url('cart_count') }}')
-            .then(response => response.json())
-            .then(data => {
-                // Update the cart count in the navbar
-                const cartCountSpan = document.getElementById('cartCount');
-                if (cartCountSpan) {
-                    cartCountSpan.textContent = data.count;
+                // Fetch the cart count from the server using an AJAX request
+                fetch('{{ url('cart_count') }}')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update the cart count in the navbar
+                        const cartCountSpan = document.getElementById('cartCount');
+                        if (cartCountSpan) {
+                            cartCountSpan.textContent = data.count;
+                        }
+                    })
+                    .catch(error => console.error('Error fetching cart count:', error));
                 }
-            })
-            .catch(error => console.error('Error fetching cart count:', error));
-    }
 
-    document.getElementById('addToCartForm').addEventListener('submit', function(event) {
-        // Prevent the form from submitting normally
-        event.preventDefault();
 
-        // Submit the form data asynchronously using fetch API or AJAX
-        fetch(this.action, {
-            method: this.method,
-            body: new FormData(this)
-        })
-        .then(response => {
-            if (response.ok) {
-                // Update the cart count after successful submission
-                updateCartCount();
-            }
-            return response.text();
-        })
-        .then(data => console.log(data))
-        .catch(error => console.error('Error submitting form:', error));
-    });
+                    document.getElementById('addToCartForm').addEventListener('submit', function(event) {
+                        // Prevent the form from submitting normally
+                        event.preventDefault();
 
-    // Call the updateCartCount function once the page is loaded
-    window.addEventListener('load', updateCartCount);
+                        // Submit the form data asynchronously using fetch API or AJAX
+                        fetch(this.action, {
+                            method: this.method,
+                            body: new FormData(this)
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                // Update the cart count after successful submission
+                                updateCartCount();
+                            }
+                            return response.text();
+                        })
+                        .then(data => console.log(data))
+                        .catch(error => console.error('Error submitting form:', error));
+                    });
+
+                    // Call the updateCartCount function once the page is loaded
+                    window.addEventListener('load', updateCartCount);
+
             </script>
 
             <div>
@@ -368,7 +573,8 @@
                             Name</a>, All right reserved.</span>
                 </div>
                 <div class="col-md-6 my-auto text-center text-md-end text-white">
-                    Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a> Distributed By
+                    Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                    Distributed By
                     <a class="border-bottom" href="https://themewagon.com">ThemeWagon</a>
                 </div>
             </div>
@@ -376,23 +582,41 @@
     </div>
     <!-- Copyright End -->
 
-
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the carousel item containing the image
+            const carouselItem = document.querySelector('.carousel-item');
+    
+            // Get the image element within the carousel item
+            const image = carouselItem.querySelector('img');
+    
+            // Get the height of the image
+            const imageHeight = image.clientHeight;
+    
+            // Output the height of the image to the console
+            console.log('Height of the slider image:', imageHeight);
+        });
+    </script>
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
             class="fa fa-arrow-up"></i></a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
 
     <!-- JavaScript Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/lightbox/js/lightbox.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js">
+    </script> --}}
+
+    <script src="home/lib/easing/easing.min.js"></script>
+    <script src="home/lib/waypoints/waypoints.min.js"></script>
+    <script src="home/lib/lightbox/js/lightbox.min.js"></script>
+    <script src="home/lib/owlcarousel/owl.carousel.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="home/js/main.js"></script>
 </body>
 
 </html>

@@ -1,25 +1,22 @@
 @foreach ($products as $product)
 <div class="col-md-6 col-lg-3 col-xl-3 h-20 p-2">
     <div class="rounded position-relative fruite-item border border-secondary">
-        <a href="{{url('product_details',$product->id)}}">
+        <a href="{{ url('product_details', $product->id) }}">
             {{-- Retrieve the main product image --}}
             <div class="fruite-img position-relative">
-                @if($product->productImages->count() > 0)
+                @if ($product->productImages->count() > 0)
+                <!-- If product has images in product_images table -->
                 <img src="{{ asset($product->productImages->first()->large_image) }}"
                     class="img-fluid w-100 rounded-top product-image" alt="Product Image" style="position: relative;">
-                <!-- Ensure the image container has relative positioning -->
-
+                @elseif ($product->productThumbnails->count() > 0)
+                <!-- If product has images in product_thumbnails table -->
+                <img src="{{ asset($product->productThumbnails->first()->image) }}"
+                    class="img-fluid w-100 rounded-top product-thumbnail" alt="Product Thumbnail"
+                    style="position: relative;">
                 @endif
             </div>
-
-            {{-- Retrieve the product thumbnail --}}
-            @if($product->productThumbnails->count() > 0)
-            <div class="thumbnail">
-                <img src="{{ asset($product->productThumbnails->first()->thumbnail_image) }}"
-                    class="img-thumbnail product-thumbnail" alt="Product Thumbnail">
-            </div>
-            @endif
         </a>
+
         <div class="rounded-bottom">
             <strong class="d-flex justify-content-center">
                 <p style="font-size: 14px;" class="text-dark">{{$product->product_name}}</p>

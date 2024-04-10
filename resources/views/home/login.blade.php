@@ -19,10 +19,11 @@
         @endif
     </div>
 
+    @include('components.navbar')
 
 
 
-    <div class="container" style="margin-top: 120px">
+    <div class="container" style="margin-top: 180px">
 
         <form style="max-width: 400px; margin: 0 auto;" method="Post" action="/customer/authenticate">
             @csrf

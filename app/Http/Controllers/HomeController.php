@@ -12,6 +12,7 @@ use App\Models\Department;
 use App\Models\Group;
 use App\Models\Orders;
 use App\Models\Product;
+use App\Models\SeasonalBanner;
 use App\Models\Slider;
 use App\Models\SubGroup;
 use Illuminate\Http\Request;
@@ -26,33 +27,42 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $data = Department::all();
+        $data = Department::paginate(12);
         $departments = Department::all();
-        $products = Product::paginate(2);
+        $products = Product::all();
         $slider = Slider::all();
+        $slider2 = Banner::all();
+        $offer_banners = SeasonalBanner::all();
 
         $featuredProducts = Product::where('featured', true)->get();
+        $new_arrivals = Product::where('new_arrivals', true)->get();
 
-        return view('home.home', compact('data', 'departments', 'products', 'slider', 'featuredProducts'));
+        return view('home.home', compact('data', 'departments', 'products', 'slider', 'slider2',  'featuredProducts', 'new_arrivals', 'offer_banners'));
     }
 
     public function show_all_products()
     {
-        $departments = Department::paginate(2);
+        $data = Department::paginate(12);
+        $departments = Department::all();
         $products = Product::paginate(2);
         // Retrieve featured products
         $featuredProducts = Product::where('featured', 1)->get();
+        $slider = Slider::all();
+        $slider2 = Banner::all();
 
         // Retrieve trending products
+
         $trendingProducts = Product::where('trending', 1)->get();
-        return view('home.products', compact('departments', 'products', 'featuredProducts', 'trendingProducts'));
+        return view('home.products', compact('data', 'departments', 'products', 'featuredProducts', 'trendingProducts', 'slider', 'slider2'));
     }
 
     public function show_contact()
     {
         $departments = Department::all();
+        $slider = Slider::all();
+        $slider2 = Banner::all();
 
-        return view('home.contact', compact('departments'));
+        return view('home.contact', compact('departments', 'slider', 'slider2'));
     }
 
     public function show_myaccount()
@@ -70,10 +80,13 @@ class HomeController extends Controller
         $products = Product::paginate(2);
         // Retrieve featured products
         $featuredProducts = Product::where('featured', 1)->get();
+        $new_arrivals = Product::where('new_arrivals', true)->paginate(12);
+        $slider = Slider::all();
+        $slider2 = Banner::all();
 
         // Retrieve trending products
         $trendingProducts = Product::where('trending', 1)->get();
-        return view('home.department', compact('departments', 'products', 'featuredProducts', 'trendingProducts'));
+        return view('home.department', compact('departments', 'products', 'featuredProducts', 'trendingProducts', 'new_arrivals', 'slider2', 'slider'));
     }
 
     public function view_department($id)
@@ -93,11 +106,13 @@ class HomeController extends Controller
         $products = Product::where('department_id', $id)->get();
         // Retrieve trending products
         $trendingProducts = Product::where('trending', 1)->get();
+        $new_arrivals = Product::where('new_arrivals', true)->paginate(12);
 
-
+        $slider = Slider::all();
+        $slider2 = Banner::all();
 
         // Pass data to the view
-        return view('home.group', compact('departments', 'department', 'groups', 'products', 'featuredProducts', 'trendingProducts'));
+        return view('home.group', compact('slider', 'slider2', 'new_arrivals', 'departments', 'department', 'groups', 'products', 'featuredProducts', 'trendingProducts'));
     }
 
     public function view_group($id)
@@ -107,11 +122,13 @@ class HomeController extends Controller
         $group = Group::find($id);
         $subgroups = $group->subGroups;
         $featuredProducts = Product::where('featured', 1)->get();
-
+        $slider = Slider::all();
+        $slider2 = Banner::all();
         // Retrieve trending products
         $trendingProducts = Product::where('trending', 1)->get();
+        $new_arrivals = Product::where('new_arrivals', true)->paginate(12);
 
-        return view('home.subgroup', compact('departments', 'products', 'group', 'subgroups', 'featuredProducts', 'trendingProducts'));
+        return view('home.subgroup', compact('slider', 'slider2', 'new_arrivals', 'departments', 'products', 'group', 'subgroups', 'featuredProducts', 'trendingProducts'));
     }
 
     public function view_subgroup_products($id)
@@ -119,13 +136,16 @@ class HomeController extends Controller
         $departments = Department::all();
         $subgroup = SubGroup::find($id);
         $subgroupproducts = Product::where('sub_group_id', $subgroup->id)->paginate(1);
-        $products = Product::where('sub_group_id', $id)->get();
+        $products = Product::where('sub_group_id', $id)->paginate(2);
         $featuredProducts = Product::where('featured', 1)->get();
 
         // Retrieve trending products
         $trendingProducts = Product::where('trending', 1)->get();
+        $slider = Slider::all();
+        $slider2 = Banner::all();
+        $new_arrivals = Product::where('new_arrivals', true)->paginate(12);
 
-        return view('home.viewsubgroup_products', compact('departments', 'subgroup', 'subgroupproducts', 'products', 'featuredProducts', 'trendingProducts'));
+        return view('home.viewsubgroup_products', compact('slider', 'new_arrivals', 'slider2', 'departments', 'subgroup', 'subgroupproducts', 'products', 'featuredProducts', 'trendingProducts'));
     }
 
     public function product_details(Request $request, $id)
@@ -138,8 +158,11 @@ class HomeController extends Controller
 
         // Retrieve trending products
         $trendingProducts = Product::where('trending', 1)->get();
+        $new_arrivals = Product::where('new_arrivals', true)->paginate(12);
+        $slider = Slider::all();
+        $slider2 = Banner::all();
 
-        return view('home.product_details', compact('departments', 'products', 'product_details', 'banner', 'featuredProducts', 'trendingProducts'));
+        return view('home.product_details', compact('slider', 'slider2', 'new_arrivals', 'departments', 'products', 'product_details', 'banner', 'featuredProducts', 'trendingProducts'));
     }
 
 
@@ -151,17 +174,21 @@ class HomeController extends Controller
             $cart = Carts::where('user_id', '=', $id)->get();
             $departments = Department::all();
 
+            $slider = Slider::all();
+            $slider2 = Banner::all();
+
             // Retrieve product images for each product in the cart
             $cart->each(function ($item) {
                 $product = Product::with('productImages')->find($item->product_id);
                 $item->product_images = $product->productImages;
             });
 
-            return view('home.cart', compact('cart', 'departments'));
+            return view('home.cart', compact('cart', 'departments', 'slider', 'slider2'));
         } else {
             return redirect('/login');
         }
     }
+
 
     public function add_cart(Request $request, $id)
     {
@@ -170,84 +197,75 @@ class HomeController extends Controller
             $customer = Auth::guard('customer')->user();
             $product = Product::find($id);
 
+            // Calculate unit price
+            $unitPrice = $product->unit_price * $request->quantity;
+
+            // Calculate unit price
+            $unitPrice = $product->unit_price * $request->quantity;
+
+            // Calculate case price
+            if ($request->case_quantity == $product->bcqty_1) {
+                $casePrice = $product->bcp_1;
+            } elseif ($request->case_quantity == $product->bcqty_2) {
+                $casePrice = $product->bcp_2;
+            } elseif ($request->case_quantity == $product->bcqty_3) {
+                $casePrice = $product->bcp_3;
+            } else {
+                $casePrice = $product->case_price;
+            }
+
+            $casePrice *= $request->case_quantity;
+
             // Check if the product already exists in the cart
             $existingCartItem = Carts::where('user_id', $customer->id)
                 ->where('product_id', $product->id)
                 ->first();
 
             if ($existingCartItem) {
-                // Update the existing cart item with new quantities
+                // Update the existing cart item with new quantities and prices
                 $existingCartItem->quantity = $request->quantity;
                 $existingCartItem->case = $request->case_quantity;
-
-                // Recalculate prices based on new quantities
-                $existingCartItem->unit_price = $product->discount_price != null ? $product->discount_price * $request->quantity : $product->unit_price * $request->quantity;
-                $existingCartItem->case_price = $product->case_price * $request->case_quantity;
-                $existingCartItem->bcqty1 = $request->bulk1 ? $product->bcqty_1 : 0;
-                $existingCartItem->bcqty2 = $request->bulk2 ? $product->bcqty_2 : 0;
-                $existingCartItem->bcqty3 = $request->bulk3 ? $product->bcqty_3 : 0;
-
-
-                if ($request->bulk1) {
-                    $existingCartItem->bcqty1 = $product->bcqty_1;
-                    $existingCartItem->total_bulk1_price = $product->bcp_1 * $product->bcqty_1;
-                }
-                if ($request->bulk2) {
-                    $existingCartItem->bcqty2 = $product->bcqty_2;
-                    $existingCartItem->total_bulk2_price = $product->bcp_2 * $product->bcqty_2;
-                }
-                if ($request->bulk3) {
-                    $existingCartItem->bcqty3 = $product->bcqty_3;
-                    $existingCartItem->total_bulk3_price = $product->bcp_3 * $product->bcqty_3;
-                }
+                $existingCartItem->unit_price = $unitPrice;
+                $existingCartItem->case_price = $casePrice;
+                $existingCartItem->rsp = $product->rsp;
+                $existingCartItem->vat = $product->vat;
+                $existingCartItem->por = $product->por;
                 // Save the updated cart item
                 $existingCartItem->save();
             } else {
                 // Create a new cart item
                 $cart = new Carts();
+                $cart->user_id = $customer->id;
                 $cart->name = $customer->name;
                 $cart->email = $customer->email;
-                $cart->phone = $customer->phone;
                 $cart->address = $customer->address;
-                $cart->user_id = $customer->id;
-                $cart->product_id = $product->id;
-                $cart->product_title = $product->product_name;
                 $cart->department_title = $product->department_title;
                 $cart->group_title = $product->group_title;
+                $cart->sub_group_title = $product->sub_group_title;
+                $cart->product_id = $product->id;
+                $cart->quantity = $request->quantity;
+                $cart->case = $request->case_quantity;
+                $cart->unit_price = $unitPrice;
+                $cart->case_price = $casePrice;
                 $cart->vat = $product->vat;
                 $cart->por = $product->por;
                 $cart->rsp = $product->rsp;
-                $cart->sub_group_title = $product->sub_group_title;
-                $cart->quantity = $request->quantity;
-                $cart->case = $request->case_quantity;
-                $cart->unit_price = $product->discount_price != null ? $product->discount_price * $request->quantity : $product->unit_price * $request->quantity;
-                $cart->case_price = $product->case_price * $request->case_quantity;
-                if ($request->bulk1) {
-                    $cart->bcqty1 = $product->bcqty_1;
-                    $cart->total_bulk1_price = $product->bcp_1 * $product->bcqty_1;
-                }
-                if ($request->bulk2) {
-                    $cart->bcqty2 = $product->bcqty_2;
-                    $cart->total_bulk2_price = $product->bcp_2 * $product->bcqty_2;
-                }
-                if ($request->bulk3) {
-                    $cart->bcqty3 = $product->bcqty_3;
-                    $cart->total_bulk3_price = $product->bcp_3 * $product->bcqty_3;
-                }
+                // Save the new cart item
                 $cart->save();
             }
-            $cartCount = Carts::where('user_id', $customer->id)->count();
 
-            // Store the updated cart count in the session
+            // Calculate and store the updated cart count in the session
+            $cartCount = Carts::where('user_id', $customer->id)->count();
             session(['cartCount' => $cartCount]);
 
-            // Return the response with the updated cart count
+            // Redirect back with a success message and updated cart count
             return redirect()->back()->with('message', 'Product added to the cart')->with('cartCount', $cartCount);
         } else {
-            // User is not authenticated, redirect to login page
+            // User is not authenticated, redirect to the login page
             return redirect('/login');
         }
     }
+
 
     public function remove_cart($id)
     {
@@ -258,10 +276,11 @@ class HomeController extends Controller
     }
 
 
-
     public function show_order()
     {
         $departments = Department::all();
+        $slider = Slider::all();
+        $slider2 = Banner::all();
 
         if (Auth::guard('customer')->check()) {
             // User is authenticated, retrieve user data
@@ -270,7 +289,7 @@ class HomeController extends Controller
 
             $order = Orders::where('user_id', $customer_id)->with('product')->get();
 
-            return view('home.order', compact('departments', 'order'));
+            return view('home.order', compact('departments', 'order', 'slider', 'slider2'));
         } else {
             return redirect('/login');
         }
@@ -374,7 +393,9 @@ class HomeController extends Controller
     //show register page
     public function register()
     {
-        return view('home.register');
+        $departments = Department::all();
+
+        return view('home.register', compact('departments'));
     }
 
     //create new customer
@@ -422,7 +443,9 @@ class HomeController extends Controller
     //show login form
     public function login()
     {
-        return view('home.login');
+        $departments = Department::all();
+
+        return view('home.login', compact('departments'));
     }
 
     //authenticate user

@@ -5,18 +5,16 @@
         <div class="border border-primary rounded position-relative vesitable-item">
             <div class="vesitable-img">
                 <a href="{{url('product_details',$pro->id)}}">
-                    @if($pro->productImages->count() > 0)
+                    @if ($pro->productImages->count() > 0)
+                    <!-- If product has images in product_images table -->
                     <img src="{{ asset($pro->productImages->first()->large_image) }}"
                         class="img-fluid w-100 rounded-top product-image" alt="Product Image"
                         style="position: relative;">
-                    <!-- Ensure the image container has relative positioning -->
-                    @endif
-                    {{-- Retrieve the product thumbnail --}}
-                    @if($pro->productThumbnails->count() > 0)
-                    <div class="thumbnail">
-                        <img src="{{ asset($pro->productThumbnails->first()->thumbnail_image) }}"
-                            class="product-thumbnail" alt="Product Thumbnail" style="position: relative;">
-                    </div>
+                    @elseif ($pro->productThumbnails->count() > 0)
+                    <!-- If product has images in product_thumbnails table -->
+                    <img src="{{ asset($pro->productThumbnails->first()->image) }}"
+                        class="img-fluid w-100 rounded-top product-thumbnail" alt="Product Thumbnail"
+                        style="position: relative;">
                     @endif
                 </a>
             </div>
