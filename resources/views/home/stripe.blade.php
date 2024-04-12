@@ -238,6 +238,14 @@
 <script src="home/lib/lightbox/js/lightbox.min.js"></script>
 <script src="home/lib/owlcarousel/owl.carousel.min.js"></script>
 
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+        class="fa fa-arrow-up"></i></a>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+
 <!-- Template Javascript -->
 <script src="home/js/main.js"></script>
 

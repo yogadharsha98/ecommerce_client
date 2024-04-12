@@ -8,6 +8,7 @@ use App\Models\Banner;
 use App\Models\Cart;
 use App\Models\Carts;
 use App\Models\Customer;
+use App\Models\CustomerPurchase;
 use App\Models\Department;
 use App\Models\Group;
 use App\Models\Orders;
@@ -200,9 +201,6 @@ class HomeController extends Controller
             // Calculate unit price
             $unitPrice = $product->unit_price * $request->quantity;
 
-            // Calculate unit price
-            $unitPrice = $product->unit_price * $request->quantity;
-
             // Calculate case price
             if ($request->case_quantity == $product->bcqty_1) {
                 $casePrice = $product->bcp_1;
@@ -216,6 +214,19 @@ class HomeController extends Controller
 
             $casePrice *= $request->case_quantity;
 
+            // Calculate total price without VAT
+            $totalPriceWithoutVAT = $unitPrice + $casePrice;
+
+            // Calculate total price with VAT
+            $totalPriceWithVAT = $totalPriceWithoutVAT * (1 + ($product->vat / 100));
+
+            // Calculate margin if case_quantity is greater than zero
+            if ($request->case_quantity > 0) {
+                $margin = (($product->rsp - ($totalPriceWithVAT / ($request->case_quantity * $product->packsize)))) * 100;
+            } else {
+                $margin = null;  // Set margin to null if case_quantity is zero
+            }
+
             // Check if the product already exists in the cart
             $existingCartItem = Carts::where('user_id', $customer->id)
                 ->where('product_id', $product->id)
@@ -227,9 +238,8 @@ class HomeController extends Controller
                 $existingCartItem->case = $request->case_quantity;
                 $existingCartItem->unit_price = $unitPrice;
                 $existingCartItem->case_price = $casePrice;
-                $existingCartItem->rsp = $product->rsp;
-                $existingCartItem->vat = $product->vat;
-                $existingCartItem->por = $product->por;
+
+                $existingCartItem->margin = $margin;
                 // Save the updated cart item
                 $existingCartItem->save();
             } else {
@@ -241,15 +251,17 @@ class HomeController extends Controller
                 $cart->address = $customer->address;
                 $cart->department_title = $product->department_title;
                 $cart->group_title = $product->group_title;
+                $cart->vat = $product->vat;
+                $cart->rsp = $product->rsp;
+                $cart->por = $product->por;
                 $cart->sub_group_title = $product->sub_group_title;
                 $cart->product_id = $product->id;
                 $cart->quantity = $request->quantity;
                 $cart->case = $request->case_quantity;
                 $cart->unit_price = $unitPrice;
                 $cart->case_price = $casePrice;
-                $cart->vat = $product->vat;
-                $cart->por = $product->por;
-                $cart->rsp = $product->rsp;
+
+                $cart->margin = $margin;
                 // Save the new cart item
                 $cart->save();
             }
@@ -264,6 +276,50 @@ class HomeController extends Controller
             // User is not authenticated, redirect to the login page
             return redirect('/login');
         }
+    }
+
+    public function updateCart(Request $request, $id)
+    {
+        $cartItem = Carts::findOrFail($id);
+
+        // Update the quantity of the cart item
+        $cartItem->quantity = $request->quantity;
+        $cartItem->save();
+
+        // Recalculate prices and margin based on the updated quantity
+        // Calculate unit price
+        $unitPrice = $cartItem->product->unit_price * $cartItem->quantity;
+
+        // Calculate case price
+        if ($cartItem->case == $cartItem->product->bcqty_1) {
+            $casePrice = $cartItem->product->bcp_1;
+        } elseif ($cartItem->case == $cartItem->product->bcqty_2) {
+            $casePrice = $cartItem->product->bcp_2;
+        } elseif ($cartItem->case == $cartItem->product->bcqty_3) {
+            $casePrice = $cartItem->product->bcp_3;
+        } else {
+            $casePrice = $cartItem->product->case_price;
+        }
+
+        $casePrice *= $cartItem->case;
+
+        // Calculate total price without VAT
+        $totalPriceWithoutVAT = $unitPrice + $casePrice;
+
+        // Calculate total price with VAT
+        $totalPriceWithVAT = $totalPriceWithoutVAT * (1 + ($cartItem->product->vat / 100));
+
+        // Calculate margin
+        $margin = (($cartItem->product->rsp - ($totalPriceWithVAT / ($cartItem->case * $cartItem->product->packsize)))) * 100;
+
+        // Update the prices and margin of the cart item
+        $cartItem->unit_price = $unitPrice;
+        $cartItem->case_price = $casePrice;
+        $cartItem->margin = $margin;
+
+        $cartItem->save();
+
+        return response()->json(['message' => 'Cart item updated successfully.']);
     }
 
 
@@ -312,63 +368,76 @@ class HomeController extends Controller
 
     public function stripePost(Request $request, $total_amount)
     {
-
         Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
+        // Round the total amount to the nearest integer
+        $rounded_total_amount = round($total_amount * 100);
+
         Stripe\Charge::create([
-            "amount" => $total_amount * 100,
+            "amount" => $rounded_total_amount,
             "currency" => "GBP",
             "source" => $request->stripeToken,
-            "description" => "Thanks for the payment. "
+            "description" => "Thanks for the payment."
         ]);
 
         $customer = Auth::guard('customer')->user();
         $customer_id = $customer->id;
+        $customer_email = $customer->email;
+        $customer_name = $customer->name;
 
-        $data = Carts::where('user_id', '=', $customer_id)->get();
+        $cartItems = Carts::where('user_id', '=', $customer_id)->get();
+        $product_ids = $cartItems->pluck('product_id')->toArray(); // Extracting product IDs from the cart items
 
-        foreach ($data as $data) {
+        // Save the purchase information in the customer_purchases table
+        $purchase = new CustomerPurchase();
+        $purchase->customer_id = $customer_id;
+        $purchase->customer_email = $customer_email;
+        $purchase->customer_name = $customer_name;
+        $purchase->product_ids = json_encode($product_ids); // Storing product IDs in JSON format
+        $purchase->paid_amount = $total_amount; // Storing the total amount with VAT
+        $purchase->save();
+
+        foreach ($cartItems as $item) {
             // Calculate total amount for each order
-            $total_amount = $data->unit_price + $data->case_price + $data->total_bulk1_price + $data->total_bulk2_price + $data->total_bulk3_price;
+            $total_amount_per_item = $item->unit_price + $item->case_price + $item->total_bulk1_price + $item->total_bulk2_price + $item->total_bulk3_price;
 
+            // Create a new order
             $order = new Orders;
 
-            //first field from the order table and second field from the cart table
-            $order->name = $data->name;
-            $order->email = $data->email;
-            $order->phone = $data->phone;
-            $order->address = $data->address;
-            $order->user_id = $data->user_id;
+            // Copy data from the cart item to the order
+            $order->name = $item->name;
+            $order->email = $item->email;
+            $order->phone = $item->phone;
+            $order->address = $item->address;
+            $order->user_id = $item->user_id;
 
-            $order->product_id = $data->product_id;
-            $order->product_title = $data->product_title;
-            $order->department_title = $data->department_title;
-            $order->group_title = $data->group_title;
-            $order->sub_group_title = $data->sub_group_title;
+            $order->product_id = $item->product_id;
+            $order->product_title = $item->product_title;
+            $order->department_title = $item->department_title;
+            $order->group_title = $item->group_title;
+            $order->sub_group_title = $item->sub_group_title;
 
-            $order->quantity = $data->quantity;
-            $order->total_unit_price = $data->unit_price;
-            $order->case = $data->case;
-            $order->total_case_price = $data->case_price;
+            $order->quantity = $item->quantity;
+            $order->total_unit_price = $item->unit_price;
+            $order->case = $item->case;
+            $order->total_case_price = $item->case_price;
 
-            $order->bcqty1 = $data->bcqty1;
-            $order->total_bulk1_price = $data->total_bulk1_price;
-            $order->bcqty2 = $data->bcqty2;
-            $order->total_bulk2_price = $data->total_bulk2_price;
-            $order->bcqty3 = $data->bcqty3;
-            $order->total_bulk3_price = $data->total_bulk3_price;
-            $order->bcqty1 = $data->bcqty1;
-            $order->vat = $data->vat;
-            $order->total_amount = $total_amount;
+            $order->bcqty1 = $item->bcqty1;
+            $order->total_bulk1_price = $item->total_bulk1_price;
+            $order->bcqty2 = $item->bcqty2;
+            $order->total_bulk2_price = $item->total_bulk2_price;
+            $order->bcqty3 = $item->bcqty3;
+            $order->total_bulk3_price = $item->total_bulk3_price;
+            $order->vat = $item->vat;
+            $order->total_amount = $total_amount_per_item;
 
             $order->payment_status = 'Paid';
-
             $order->delivery_status = 'processing';
 
             $order->save();
 
-            $cart_id = $data->id;
-            $cart = Carts::find($cart_id);
+            // Delete the cart item after creating the order
+            $cart = Carts::find($item->id);
             $cart->delete();
         }
 
@@ -376,6 +445,7 @@ class HomeController extends Controller
 
         return back();
     }
+
 
     public function product_search(Request $request)
     {
@@ -426,7 +496,7 @@ class HomeController extends Controller
 
         // Optionally, you can log in the newly registered customer here
 
-        return redirect('/')->with('message', 'User created successfully');
+        return redirect('/');
     }
 
     //logout
@@ -437,7 +507,7 @@ class HomeController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('message', 'You have been Logged out!');
+        return redirect('/');
     }
 
     //show login form

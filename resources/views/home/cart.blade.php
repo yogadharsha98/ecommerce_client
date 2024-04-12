@@ -92,6 +92,54 @@
 
 <body>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Your JavaScript code here
+            // Event listeners, function calls, etc.
+
+            // Function to send AJAX request to update quantity
+            function updateQuantity(productId, quantity) {
+        // Send AJAX request to the backend controller
+        $.ajax({
+            type: 'POST', // Use POST method
+            url: '/update_cart/' + productId,
+            data: {
+                _token: '{{ csrf_token() }}',
+                _method: 'PUT', // Specify PUT method
+                quantity: quantity
+            },
+            success: function(response) {
+                // Update the quantity input field on success
+                var quantityInput = $('#quantityInput_' + productId);
+                quantityInput.val(quantity); // Update input field value
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error(xhr.responseText);
+            }
+        });
+    }
+
+    // Event listener for increment button
+    $('.incrementBtn').click(function() {
+        var productId = $(this).data('product-id'); // Get product ID from data attribute
+        var quantityInput = $('#quantityInput_' + productId);
+        var newQuantity = parseInt(quantityInput.val()) + 1;
+        updateQuantity(productId, newQuantity);
+    });
+
+    // Event listener for decrement button
+    $('.decrementBtn').click(function() {
+        var productId = $(this).data('product-id'); // Get product ID from data attribute
+        var quantityInput = $('#quantityInput_' + productId);
+        var newQuantity = parseInt(quantityInput.val()) - 1;
+        if (newQuantity >= 0) {
+            updateQuantity(productId, newQuantity);
+        }
+    });
+});
+    </script>
+
 
     <!-- Navbar start -->
     @include('components.navbar')
@@ -189,7 +237,7 @@
                         $totalItemPrice = $cartItem->unit_price + $cartItem->case_price + $cartItem->total_bulk1_price + $cartItem->total_bulk2_price + $cartItem->total_bulk3_price;
                 
                         // Calculate total item price with VAT
-                        $totalPriceWithVat = $totalItemPrice + (($cartItem->vat * $cartItem->unit_price) / 100);
+                        $totalPriceWithVat = $totalItemPrice + (($cartItem->vat * $totalItemPrice) / 100);
                 
                         // Add total item price with VAT to the total amount
                         $total_amount += $totalPriceWithVat;
@@ -271,17 +319,24 @@
                             <div class="col-lg-3">
                                 <div style="color: red;"><i class="fas fa-pound-sign"></i>{{$totalItemPrice}} (ex vat)
                                 </div>
-                                <div style="margin-top: 50px;">Margin %</div>
+                                @if ($cartItem->case > 0) {{-- Check if case quantity is greater than 0 --}}
+                                <div style="margin-top: 50px;">Margin:{{$cartItem->margin}} %</div>
+                                @endif
                             </div>
                             <div class="col-lg-1 d-flex ">
                                 <div class="d-flex flex-column align-items-center" style="width: 80px">
                                     <div class="d-flex flex-column align-items-center gap-2">
-                                        <button class="btn  incrementBtn" type="button" style="width: 60px"><i
-                                                class="bi bi-chevron-compact-up"></i></button>
-                                        <input class="form-control quantityInput" style="width: 80px; font-size:12px;"
-                                            value="{{ $cartItem->quantity ?? 0 }}" min="0">
-                                        <button class="btn  decrementBtn" type="button" style="width: 60px"><i
-                                                class="bi bi-chevron-compact-down"></i></button>
+
+                                        <button class="btn incrementBtn" data-product-id="{{ $cartItem->id }}">
+                                            <i class="bi bi-chevron-compact-up"></i>
+                                        </button>
+                                        <input name="quantity" class="form-control quantityInput"
+                                            id="quantityInput_{{ $cartItem->id }}"
+                                            value="{{ $cartItem->quantity ?? 0 }}" min="0" style="width: 80px">
+                                        <button class="btn decrementBtn" data-product-id="{{ $cartItem->id }}">
+                                            <i class="bi bi-chevron-compact-down"></i>
+                                        </button>
+
 
 
                                     </div>
@@ -418,13 +473,16 @@
                                         <div class="mt-auto">
                                             <div class="row ">
                                                 <div class="d-flex justify-content-center gap-2">
-                                                    <button class="btn btn-outline-secondary decrementBtn"
-                                                        type="button"><i class="bi bi-dash"></i></button>
-                                                    <input class="form-control quantityInput"
+                                                    <button class="btn border-secondary decrementBtn"
+                                                        data-product-id="{{ $cartItem->id }}"><i
+                                                            class="bi bi-dash"></i></button>
+                                                    <input name="quantity" class="form-control quantityInput"
+                                                        id="quantityInput_{{ $cartItem->id }}"
                                                         value="{{ $cartItem->quantity ?? 0 }}" min="0"
-                                                        style="width: 70px;font-size:12px;">
-                                                    <button class="btn btn-outline-secondary incrementBtn"
-                                                        type="button"><i class="bi bi-plus"></i></button>
+                                                        style="width: 80px">
+                                                    <button class="btn border-secondary incrementBtn"
+                                                        data-product-id="{{ $cartItem->id }}"><i
+                                                            class="bi bi-plus"></i></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -470,24 +528,8 @@
             </script>
 
 
-            <script>
-                document.querySelectorAll('.incrementBtn').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const input = button.parentNode.querySelector('.quantityInput');
-                        input.stepUp();
-                    });
-                });
 
-                document.querySelectorAll('.decrementBtn').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const input = button.parentNode.querySelector('.quantityInput');
-                        input.stepDown();
-                    });
-                });
-            </script>
-
-
-            <script>
+            {{-- <script>
                 function updateQuantity(inputId, index, type) {
                     var inputField = document.getElementById(inputId);
                     var currentValue = parseInt(inputField.value);
@@ -508,7 +550,7 @@
                     });
                     document.getElementById('total_amount').textContent = totalAmount.toFixed(2);
                 }
-            </script>
+            </script> --}}
 
             <script>
                 function updateCartCount() {
@@ -600,6 +642,8 @@
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
             class="fa fa-arrow-up"></i></a>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->integer('bcqty1')->nullable();
             $table->integer('bcqty2')->nullable();
             $table->integer('bcqty3')->nullable();
-            $table->integer('vat')->nullable();
+            $table->decimal('vat', 10, 2)->nullable();
             $table->decimal('total_bulk1_price', 10, 2)->nullable();
             $table->decimal('total_bulk2_price', 10, 2)->nullable();
             $table->decimal('total_bulk3_price', 10, 2)->nullable();
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->dropColumn('bcqty1');
             $table->dropColumn('bcqty2');
             $table->dropColumn('bcqty3');
-            $table->integer('vat')->nullable();
+            $table->decimal('vat');
             $table->dropColumn('total_bulk1_price');
             $table->dropColumn('total_bulk2_price');
             $table->dropColumn('total_bulk3_price');
